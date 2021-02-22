@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "314152728806",
+    "firebase_url": "https://taximyson-55a53-default-rtdb.firebaseio.com",
+    "project_id": "taximyson-55a53",
+    "storage_bucket": "taximyson-55a53.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:314152728806:android:0f6608b9b8e47fb5e16327",
+        "android_client_info": {
+          "package_name": "com.myson.taxi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "314152728806-s0oa7d09sbu0csljl2kbcjvagclqqqul.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALuLnbsChm56G2OtNBMJjcKRDY_Ru_jwE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "314152728806-s0oa7d09sbu0csljl2kbcjvagclqqqul.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
