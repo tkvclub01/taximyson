@@ -109,37 +109,43 @@ export default function PaymentDetails(props) {
     setUseWalletCash(false);
   }
 
-  const doPayment = (payment_mode) => {
+  const doPayment = async (payment_mode) => {
     // Thanh Toán Cuốc Xe
     if (payment_mode == 'cash' || payment_mode == 'wallet') {
-        let curBooking = { ...booking };
-        curBooking.status = 'PAID';
-        curBooking.payment_mode = payment_mode;
-        curBooking.customer_paid = payDetails.amount;
-        curBooking.discount_amount = payDetails.discount;
-        curBooking.usedWalletMoney = payDetails.usedWalletMoney;
-        curBooking.cardPaymentAmount = 0;
-        curBooking.cashPaymentAmount = payDetails.payableAmmount;
-        dispatch(updateBooking(curBooking));
+      let curBooking = {...booking};
+      curBooking.status = 'PAID';
+      curBooking.payment_mode = payment_mode;
+      curBooking.customer_paid = payDetails.amount;
+      curBooking.discount_amount = payDetails.discount;
+      curBooking.usedWalletMoney = payDetails.usedWalletMoney;
+      curBooking.cardPaymentAmount = 0;
+      curBooking.cashPaymentAmount = payDetails.payableAmmount;
+      dispatch(updateBooking(curBooking));
 
-        if(payDetails.usedWalletMoney>0){
-          let walletBalance = userdata.walletBalance - payDetails.usedWalletMoney;
-          let tDate = new Date();
-          let details = {
-            type: 'Debit',
-            amount: payDetails.usedWalletMoney,
-            date: tDate.toString(),
-            txRef: booking.id
-          }
+      if (payDetails.usedWalletMoney > 0) {
+        let walletBalance = userdata.walletBalance - payDetails.usedWalletMoney;
+        let tDate = new Date();
+        let details = {
+          type: 'Debit',
+          amount: payDetails.usedWalletMoney,
+          date: tDate.toString(),
+          txRef: booking.id
+        }
 
-          dispatch(updateWalletBalance(walletBalance,details));
-        }
-        if(userdata.usertype == 'rider') {
-          props.navigation.navigate('DriverRating',{booking:booking});
-        }else{
-          props.navigation.navigate('DriverTrips');
-        }
-    }else{
+        dispatch(updateWalletBalance(walletBalance, details));
+      }
+      if (userdata.usertype == 'rider') {
+        // Thưởng cho người giới thiệu khách % cài đặt / tổng giá cuốc xe
+        let bonus_value = (payDetails.usedWalletMoney * settings.bonus) / 100;
+        await addToWallet(userdata.signupViaReferral, bonus_value);
+        props.navigation.navigate('DriverRating', {booking: booking});
+      } else {
+        // Thưởng cho người giới thiệu tài xế % cài đặt / tổng giá cuốc xe
+        let bonusd_value = (payDetails.usedWalletMoney * settings.bonusd) / 100;
+        await addToWallet(userdata.signupViaReferral, bonusd_value);
+        props.navigation.navigate('DriverTrips');
+      }
+    } else {
       let payData = {
         email: userdata.email,
         amount: payDetails.payableAmmount,
@@ -150,7 +156,7 @@ export default function PaymentDetails(props) {
         quantity: 1
       }
 
-      let curBooking = { ...booking };
+      let curBooking = {...booking};
       curBooking.payment_mode = payment_mode;
       curBooking.status = 'PENDING';
       curBooking.customer_paid = payDetails.amount;
@@ -159,7 +165,7 @@ export default function PaymentDetails(props) {
       curBooking.cardPaymentAmount = payDetails.payableAmmount;
       curBooking.cashPaymentAmount = 0;
       dispatch(updateBooking(curBooking));
-      if(userdata.usertype == 'rider') {
+      if (userdata.usertype == 'rider') {
         props.navigation.navigate("paymentMethod", {
           payData: payData,
           userdata: userdata,
@@ -167,10 +173,10 @@ export default function PaymentDetails(props) {
           providers: providers,
           booking: curBooking
         });
-      }else{
+      } else {
         props.navigation.navigate('DriverTrips');
       }
-    
+
     }
   }
 

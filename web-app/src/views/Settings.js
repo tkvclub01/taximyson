@@ -61,6 +61,7 @@ const Settings = (props) => {
     code: 'USD',
     symbol: '$',
     bonus: 0,
+    bonusd: 0,
     panic: '',
     otp_secure:false,
     driver_approval:false,
@@ -94,6 +95,10 @@ const Settings = (props) => {
   const handleBonusChange = (e) => {
     setData({ ...data, bonus: parseFloat(e.target.value)>=0?parseFloat(e.target.value):'' });
   };
+
+    const handleBonusdChange = (e) => {
+        setData({ ...data, bonusd: parseFloat(e.target.value)>=0?parseFloat(e.target.value):'' });
+    };
 
 
   const handleSubmit = (e) => {
@@ -163,6 +168,22 @@ const Settings = (props) => {
                 onChange={handleBonusChange}
                 value={data.bonus}
               />
+
+              <Typography component="h1" variant="h5" style={{ marginTop: '30px' }}>
+                  {language.referral_bonus_driver}
+              </Typography>
+              <TextField
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  id="bonusd"
+                  label={language.referral_bonus_driver}
+                  name="bonusd"
+                  autoComplete="bonusd"
+                  onChange={handleBonusdChange}
+                  value={data.bonusd}
+              />
+
               <Typography component="h1" variant="h5" style={{ marginTop: '30px' }}>
                 {language.security_title}
               </Typography>

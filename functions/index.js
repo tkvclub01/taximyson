@@ -95,7 +95,10 @@ exports.setup = functions.https.onRequest((request, response) => {
               "min_fare" : 10,
               "name" : "Economy",
               "rate_per_hour" : 5,
-              "rate_per_kilometer" : 5
+              "rate_per_kilometer" : 11,
+              "rate_per_kilometer_10_15" : 9.5,
+              "rate_per_kilometer_15_30" : 9.5,
+              "rate_per_kilometer_30" : 9
             }, {
               "convenience_fees" : 15,
               "extra_info" : "Capacity: 4, Type: HatchBack",
@@ -103,7 +106,10 @@ exports.setup = functions.https.onRequest((request, response) => {
               "min_fare" : 20,
               "name" : "Comfort",
               "rate_per_hour" : 6,
-              "rate_per_kilometer" : 8
+                "rate_per_kilometer" : 11,
+                "rate_per_kilometer_10_15" : 9.5,
+                "rate_per_kilometer_15_30" : 9.5,
+                "rate_per_kilometer_30" : 9
             }, {
               "convenience_fees" : 15,
               "extra_info" : "Capacity: 4,Type: Sedan",
@@ -111,7 +117,10 @@ exports.setup = functions.https.onRequest((request, response) => {
               "min_fare" : 30,
               "name" : "Exclusive",
               "rate_per_hour" : 8,
-              "rate_per_kilometer" : 10
+                "rate_per_kilometer" : 11,
+                "rate_per_kilometer_10_15" : 9.5,
+                "rate_per_kilometer_15_30" : 9.5,
+                "rate_per_kilometer_30" : 9
             } ]
           },
         "settings": {
@@ -122,6 +131,7 @@ exports.setup = functions.https.onRequest((request, response) => {
             "otp_secure": false,
             "email_verify": true,
             "bonus": 10,
+            "bonusd": 10,
             "CarHornRepeat": false,
             "CompanyName": "Etoviet App Solutions",
             "CompanyWebsite": "https://etoviet.com",
@@ -513,8 +523,10 @@ exports.user_signup = functions.https.onRequest(async (request, response) => {
         if(userRecord && userRecord.uid){
             await admin.database().ref('users/' + userRecord.uid).set(regData);
             if(userDetails.signupViaReferral){
+                /* Hủy thưởng tiền lúc đăng ký
                 await addToWallet(userDetails.signupViaReferral, settings.bonus);
                 await addToWallet(userRecord.uid, settings.bonus);
+                */
             }
             response.send({ uid: userRecord.uid });
         }else{

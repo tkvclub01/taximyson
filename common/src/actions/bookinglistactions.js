@@ -158,8 +158,8 @@ export const updateBooking = (booking) => (dispatch) => (firebase) => {
         booking.trip_cost = fare.grandTotal;
         booking.trip_end_time = end_time.toLocaleTimeString(dateStyle);
         booking.distance = distance;
-        booking.convenience_fees = fare.convenience_fees;
-        booking.driver_share = fare.grandTotal - fare.convenience_fees;
+        booking.convenience_fees = fare.grandTotal - fare.convenience_fees;
+        booking.driver_share = fare.convenience_fees;
         booking.endTime = end_time.getTime();
         booking.total_trip_time = totalTimeTaken;
         booking.coords = res.coords;
