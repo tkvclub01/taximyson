@@ -158,7 +158,7 @@ export default function DriverTrips(props) {
                                     <Text style={styles.listDate}>{new Date(item.tripdate).toLocaleString(dateStyle)}</Text>
                                 </View>
                                 <View style={styles.rateViewStyle}>
-                                    <Text style={styles.rateViewTextStyle}>{settings.symbol}{item ? item.estimate > 0 ? parseFloat(item.estimate).toFixed(2) : 0 : null}</Text>
+                                    <Text style={styles.rateViewTextStyle}>{item ? item.estimate > 0 ? parseFloat(item.estimate).toFixed(0) : 0 : null} {settings.symbol}</Text>
                                 </View>
                                 <View style={styles.estimateView}>
                                     <Text style={styles.listEstimate}>{item.estimateDistance? (item.estimateDistance/1000).toFixed(1): 0} {language.km}</Text>

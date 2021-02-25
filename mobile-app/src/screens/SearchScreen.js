@@ -77,9 +77,7 @@ export default function SearchScreen(props) {
                     width: '100%',
                 },
                 description: {
-                    fontWeight: 'bold'
-                },
-                description: {
+                    fontWeight: 'bold',
                     color: colors.WHITE
                 },
                 predefinedPlacesDescription: {

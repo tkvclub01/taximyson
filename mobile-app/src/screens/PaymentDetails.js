@@ -332,13 +332,13 @@ export default function PaymentDetails(props) {
           {userdata && userdata.usertype == 'driver' ?
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 25, paddingRight: 25 }}>
               <Text style={{ color: colors.BLACK, textAlign: 'left', lineHeight: 45, fontSize: 16 }}>{language.distance}</Text>
-              <Text style={{ color: colors.BLACK, textAlign: 'left', lineHeight: 45, fontSize: 16 }}>{booking ? booking.distance ? parseFloat(booking.distance / 1000).toFixed(2) + ' Kms' : '0.00 Km' : '0.00 Km'}</Text>
+              <Text style={{ color: colors.BLACK, textAlign: 'left', lineHeight: 45, fontSize: 16 }}>{booking ? (booking.distance/1000).toFixed(1): 0} {language.km}</Text>
             </View>
             : null}
           {userdata && userdata.usertype == 'driver' ?
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 25, paddingRight: 25 }}>
               <Text style={{ color: colors.BLACK, textAlign: 'left', lineHeight: 45, fontSize: 16 }}>{language.total_time}</Text>
-              <Text style={{ color: colors.BLACK, textAlign: 'left', lineHeight: 45, fontSize: 16 }}>{booking ? booking.distance ? parseFloat(booking.total_trip_time / 60).toFixed(1) + ' Mins' : '0.0 Mins' : '0.0 Mins'}</Text>
+              <Text style={{ color: colors.BLACK, textAlign: 'left', lineHeight: 45, fontSize: 16 }}>{booking ? (booking.total_trip_time/60).toFixed(0): 0} {language.mins}</Text>
             </View>
             : null}
           {userdata && userdata.usertype == 'driver' ?

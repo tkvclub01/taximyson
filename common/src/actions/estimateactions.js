@@ -39,7 +39,7 @@ export const getEstimate = (bookingData) => (dispatch) => (firebase) => {
           carDetails:bookingData.carDetails,
           estimateDistance: res.distance,
           fareCost: fareCalculation ? parseFloat(fareCalculation.totalCost).toFixed(2) : 0,
-          estimateFare: fareCalculation ? parseFloat(fareCalculation.grandTotal).toFixed(2) : 0,
+          estimateFare: fareCalculation ? parseFloat(fareCalculation.grandTotal).toFixed(0) : 0,
           estimateTime:res.duration,
           convenience_fees: fareCalculation ? parseFloat(fareCalculation.convenience_fees).toFixed(2) : 0,
           waypoints: waypoints

@@ -27,6 +27,7 @@
   "private": true,
   "dependencies": {
     "concurrently": "^5.3.0",
-    "fs-extra": "^9.0.1"
+    "fs-extra": "^9.0.1",
+    "react-native-web": "^0.15.0"
   }
 }

@@ -60,8 +60,8 @@ export default function WithdrawMoneyScreen(props) {
         onPress={() => { 
           quckAdd(index); 
         }}>
-        <Text style={styles.quckMoneyText, { color: item.selected ? colors.WHITE : colors.BLACK }} >
-          {settings.symbol}{item.amount}
+        <Text style={[styles.quckMoneyText, { color: item.selected ? colors.WHITE : colors.BLACK }]} >
+          {item.amount} {settings.symbol}
         </Text>
       </TouchableOpacity>
     )

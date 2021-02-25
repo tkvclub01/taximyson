@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, {useState, useRef, useEffect, useContext} from 'react';
 import {
     StyleSheet,
     View,
@@ -9,16 +9,17 @@ import {
     Platform,
     TouchableWithoutFeedback, Alert
 } from 'react-native';
-import { Icon, Button, Header } from 'react-native-elements';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import { colors } from '../common/theme';
-var { width, height } = Dimensions.get('window');
-import { useSelector, useDispatch } from 'react-redux';
-import { language } from 'config';
-import { FirebaseContext } from 'common/src';
+import {Icon, Button, Header} from 'react-native-elements';
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+import {colors} from '../common/theme';
+
+var {width, height} = Dimensions.get('window');
+import {useSelector, useDispatch} from 'react-redux';
+import {language} from 'config';
+import {FirebaseContext} from 'common/src';
 
 export default function FareScreen(props) {
-    const { api } = useContext(FirebaseContext);
+    const {api} = useContext(FirebaseContext);
     const {
         addBooking,
         clearEstimate,
@@ -43,8 +44,11 @@ export default function FareScreen(props) {
 
     useEffect(() => {
         setTimeout(() => {
-            mapRef.current.fitToCoordinates([{ latitude: tripdata.pickup.lat, longitude: tripdata.pickup.lng }, { latitude: tripdata.drop.lat, longitude: tripdata.drop.lng }], {
-                edgePadding: { top: 40, right: 40, bottom: 40, left: 40 },
+            mapRef.current.fitToCoordinates([{
+                latitude: tripdata.pickup.lat,
+                longitude: tripdata.pickup.lng
+            }, {latitude: tripdata.drop.lat, longitude: tripdata.drop.lng}], {
+                edgePadding: {top: 40, right: 40, bottom: 40, left: 40},
                 animated: true,
             });
         }, 1000);
@@ -54,10 +58,10 @@ export default function FareScreen(props) {
         if (bookingdata.booking) {
             dispatch(clearEstimate());
             dispatch(clearBooking());
-            if(bookingdata.booking.mainData.bookLater){
+            if (bookingdata.booking.mainData.bookLater) {
                 props.navigation.navigate('RideList');
-            }else{
-                props.navigation.navigate('BookedCab',{bookingId:bookingdata.booking.booking_id});
+            } else {
+                props.navigation.navigate('BookedCab', {bookingId: bookingdata.booking.booking_id});
             }
         }
         if (bookingdata.error && bookingdata.error.flag) {
@@ -85,7 +89,16 @@ export default function FareScreen(props) {
         <View style={styles.container}>
             <Header
                 backgroundColor={colors.GREY.default}
-                leftComponent={{ icon: 'md-menu', type: 'ionicon', color: colors.WHITE, size: 30, component: TouchableWithoutFeedback, onPress: () => { props.navigation.toggleDrawer(); } }}
+                leftComponent={{
+                    icon: 'md-menu',
+                    type: 'ionicon',
+                    color: colors.WHITE,
+                    size: 30,
+                    component: TouchableWithoutFeedback,
+                    onPress: () => {
+                        props.navigation.toggleDrawer();
+                    }
+                }}
                 centerComponent={<Text style={styles.headerTitleStyle}>{language.confrim_booking}</Text>}
                 containerStyle={styles.headerStyle}
                 innerContainerStyles={styles.headerInnerStyle}
@@ -93,9 +106,9 @@ export default function FareScreen(props) {
 
             <View style={styles.topContainer}>
                 <View style={styles.topLeftContainer}>
-                    <View style={styles.circle} />
-                    <View style={styles.staightLine} />
-                    <View style={styles.square} />
+                    <View style={styles.circle}/>
+                    <View style={styles.staightLine}/>
+                    <View style={styles.square}/>
                 </View>
                 <View style={styles.topRightContainer}>
                     <TouchableOpacity style={styles.whereButton}>
@@ -137,7 +150,7 @@ export default function FareScreen(props) {
                         }}
                     >
                         <Marker
-                            coordinate={{ latitude: (tripdata.pickup.lat), longitude: (tripdata.pickup.lng) }}
+                            coordinate={{latitude: (tripdata.pickup.lat), longitude: (tripdata.pickup.lng)}}
                             title={tripdata.pickup.add}
                             pinColor={colors.GREEN.default}
                         >
@@ -145,7 +158,7 @@ export default function FareScreen(props) {
 
 
                         <Marker
-                            coordinate={{ latitude: (tripdata.drop.lat), longitude: (tripdata.drop.lng) }}
+                            coordinate={{latitude: (tripdata.drop.lat), longitude: (tripdata.drop.lng)}}
                             title={tripdata.drop.add}
                         >
                         </Marker>
@@ -163,7 +176,7 @@ export default function FareScreen(props) {
             </View>
             <View style={styles.bottomContainer}>
                 <View style={styles.offerContainer}>
-                    <TouchableOpacity >
+                    <TouchableOpacity>
                         <Text style={styles.offerText}> {language.estimate_fare_text}</Text>
                     </TouchableOpacity>
                 </View>
@@ -184,16 +197,21 @@ export default function FareScreen(props) {
                         </View>
 
                         <View style={styles.iconContainer}>
-                            <Text style={styles.priceText}> {settings ? settings.symbol : null} {estimate ? estimate.estimateFare : null}</Text>
+                            <Text
+                                style={styles.priceText}>{estimate ? estimate.estimateFare : null} {settings ? settings.symbol : null}</Text>
                         </View>
 
                     </View>
                     <View style={styles.priceDetailsMiddle}>
-                        <View style={styles.triangle} />
-                        <View style={styles.lineHorizontal} />
+                        <View style={styles.triangle}/>
+                        <View style={styles.lineHorizontal}/>
                     </View>
                     <View style={styles.logoContainer}>
-                        <Image source={require('../../assets/images/paytm_logo.png')} style={styles.logoImage} />
+                        {/*<Image source={require('../../assets/images/paytm_logo.png')} style={styles.logoImage}/>*/}
+                        <Text
+                            style={styles.totalTimeText}>{language.estimate_time_text}: {estimate ? (estimate.estimateTime/60).toFixed(0): 0} {language.mins}</Text>
+                        <Text
+                            style={styles.totalTimeText}>{language.distance}: {estimate ? (estimate.estimateDistance/1000).toFixed(1): 0} {language.km}</Text>
                     </View>
                 </View>
                 <View style={styles.buttonsContainer}>
@@ -201,7 +219,7 @@ export default function FareScreen(props) {
                         <Button
                             title={language.cancel}
                             loading={false}
-                            loadingProps={{ size: "large", color: colors.BLUE.default.primary }}
+                            loadingProps={{size: "large", color: colors.BLUE.default.primary}}
                             titleStyle={styles.buttonText}
                             onPress={onPressCancel}
                             buttonStyle={styles.buttonStyle}
@@ -212,7 +230,7 @@ export default function FareScreen(props) {
                         <Button
                             title={language.confrim_booking}
                             loading={false}
-                            loadingProps={{ size: "large", color: colors.BLUE.default.primary }}
+                            loadingProps={{size: "large", color: colors.BLUE.default.primary}}
                             titleStyle={styles.buttonText}
                             disabled={buttonDisabled}
                             onPress={bookNow}
@@ -278,11 +296,11 @@ const styles = StyleSheet.create({
         width: 14,
         backgroundColor: colors.GREY.iconPrimary
     },
-    whereButton: { flex: 1, justifyContent: 'center', borderBottomColor: colors.WHITE, borderBottomWidth: 1 },
-    whereContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' },
-    whereText: { flex: 9, fontFamily: 'Roboto-Regular', fontSize: 14, fontWeight: '400', color: colors.WHITE },
-    iconContainer: { flex: 1 },
-    dropButton: { flex: 1, justifyContent: 'center' },
+    whereButton: {flex: 1, justifyContent: 'center', borderBottomColor: colors.WHITE, borderBottomWidth: 1},
+    whereContainer: {flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'},
+    whereText: {flex: 9, fontFamily: 'Roboto-Regular', fontSize: 14, fontWeight: '400', color: colors.WHITE},
+    iconContainer: {flex: 1},
+    dropButton: {flex: 1, justifyContent: 'center'},
     mapcontainer: {
         flex: 7,
         width: width,
@@ -293,17 +311,31 @@ const styles = StyleSheet.create({
         flex: 1,
         ...StyleSheet.absoluteFillObject,
     },
-    bottomContainer: { flex: 2.5, alignItems: 'center' },
-    offerContainer: { flex: 1, backgroundColor: colors.YELLOW.secondary, width: width, justifyContent: 'center', borderBottomColor: colors.YELLOW.primary, borderBottomWidth: Platform.OS == 'ios' ? 1 : 0 },
-    offerText: { alignSelf: 'center', color: colors.GREY.btnPrimary, fontSize: 12, fontFamily: 'Roboto-Regular' },
-    priceDetailsContainer: { flex: 2.3, backgroundColor: colors.WHITE, flexDirection: 'row', position: 'relative', zIndex: 1 },
-    priceDetailsLeft: { flex: 19 },
-    priceDetailsMiddle: { flex: 2, height: 50, width: 1, alignItems: 'center' },
-    priceDetails: { flex: 1, flexDirection: 'row' },
-    totalFareContainer: { flex: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
-    totalFareText: { color: colors.GREY.btnPrimary, fontFamily: 'Roboto-Bold', fontSize: 15, marginLeft: 40 },
-    infoIcon: { flex: 2, alignItems: 'center', justifyContent: 'center' },
-    priceText: { alignSelf: 'center', color: colors.GREY.iconSecondary, fontFamily: 'Roboto-Bold', fontSize: 20 },
+    bottomContainer: {flex: 2.5, alignItems: 'center'},
+    offerContainer: {
+        flex: 1,
+        backgroundColor: colors.YELLOW.secondary,
+        width: width,
+        justifyContent: 'center',
+        borderBottomColor: colors.YELLOW.primary,
+        borderBottomWidth: Platform.OS == 'ios' ? 1 : 0
+    },
+    offerText: {alignSelf: 'center', color: colors.GREY.btnPrimary, fontSize: 12, fontFamily: 'Roboto-Regular'},
+    priceDetailsContainer: {
+        flex: 2.3,
+        backgroundColor: colors.WHITE,
+        flexDirection: 'row',
+        position: 'relative',
+        zIndex: 1
+    },
+    priceDetailsLeft: {flex: 19},
+    priceDetailsMiddle: {flex: 2, height: 50, width: 1, alignItems: 'center'},
+    priceDetails: {flex: 1, flexDirection: 'row'},
+    totalFareContainer: {flex: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'},
+    totalFareText: {color: colors.GREY.btnPrimary, fontFamily: 'Roboto-Bold', fontSize: 15, marginLeft: 40},
+    totalTimeText: {color: colors.GREY.btnPrimary, fontFamily: 'Roboto', fontSize: 13, marginLeft: 2},
+    infoIcon: {flex: 2, alignItems: 'center', justifyContent: 'center'},
+    priceText: {alignSelf: 'center', color: colors.GREY.iconSecondary, fontFamily: 'Roboto-Bold', fontSize: 20},
     triangle: {
         width: 0,
         height: 0,
@@ -316,19 +348,19 @@ const styles = StyleSheet.create({
         borderRightColor: colors.TRANSPARENT,
         borderBottomColor: colors.YELLOW.secondary,
         transform: [
-            { rotate: '180deg' }
+            {rotate: '180deg'}
         ],
         marginTop: -1, overflow: 'visible'
     },
-    lineHorizontal: { height: height / 18, width: 1, backgroundColor: colors.BLACK, alignItems: 'center', marginTop: 10 },
-    logoContainer: { flex: 19, alignItems: 'center', justifyContent: 'center' },
-    logoImage: { width: 80, height: 80 },
-    buttonsContainer: { flex: 1.5, flexDirection: 'row' },
-    buttonText: { color: colors.WHITE, fontFamily: 'Roboto-Bold', fontSize: 17, alignSelf: 'flex-end' },
-    buttonStyle: { backgroundColor: colors.GREY.secondary, elevation: 0 },
-    buttonContainerStyle: { flex: 1, backgroundColor: colors.GREY.secondary },
-    confirmButtonStyle: { backgroundColor: colors.GREY.btnPrimary, elevation: 0 },
-    confirmButtonContainerStyle: { flex: 1, backgroundColor: colors.GREY.btnPrimary },
+    lineHorizontal: {height: height / 18, width: 1, backgroundColor: colors.BLACK, alignItems: 'center', marginTop: 10},
+    logoContainer: {flex: 19, alignItems: 'center', justifyContent: 'center'},
+    logoImage: {width: 80, height: 80},
+    buttonsContainer: {flex: 1.5, flexDirection: 'row'},
+    buttonText: {color: colors.WHITE, fontFamily: 'Roboto-Bold', fontSize: 17, alignSelf: 'flex-end'},
+    buttonStyle: {backgroundColor: colors.GREY.secondary, elevation: 0},
+    buttonContainerStyle: {flex: 1, backgroundColor: colors.GREY.secondary},
+    confirmButtonStyle: {backgroundColor: colors.GREY.btnPrimary, elevation: 0},
+    confirmButtonContainerStyle: {flex: 1, backgroundColor: colors.GREY.btnPrimary},
 
     flexView: {
         flex: 1

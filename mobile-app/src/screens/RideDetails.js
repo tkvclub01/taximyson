@@ -223,14 +223,14 @@ export default function RideDetails(props) {
                                         <Text>{language.WalletPayment}</Text>
 
                                     </View>
-                                    <Text >  {settings.symbol}{paramData && paramData.usedWalletMoney ? parseFloat(paramData.usedWalletMoney).toFixed(2) : 0}</Text>
+                                    <Text >  {settings.symbol}{paramData && paramData.usedWalletMoney ? parseFloat(paramData.usedWalletMoney).toFixed(0) : 0}</Text>
 
                                 </View>
                                 : null : null}
                         </View>
                         <View style={styles.paybleAmtView}>
                             <Text style={styles.billTitle}>{language.grand_total}</Text>
-                            <Text style={styles.billAmount2}>{settings.symbol}{paramData && paramData.customer_paid ? parseFloat(paramData.customer_paid).toFixed(2) : null}</Text>
+                            <Text style={styles.billAmount2}>{paramData && paramData.customer_paid ? parseFloat(paramData.customer_paid).toFixed(0) : null} {settings.symbol}</Text>
                         </View>
                     </View>
                     : null}
@@ -396,9 +396,6 @@ const styles = StyleSheet.create({
         width: 0,
         marginLeft: 6
     },
-    billView: {
-        marginVertical: 5
-    },
     billTitle: {
         fontSize: 18,
         color: colors.GREY.default,
@@ -492,7 +489,8 @@ const styles = StyleSheet.create({
         lineHeight: 20
     },
     billView: {
-        paddingHorizontal: 14
+        paddingHorizontal: 14,
+        marginVertical: 5
     },
     billText: {
         fontFamily: 'Roboto-Bold'

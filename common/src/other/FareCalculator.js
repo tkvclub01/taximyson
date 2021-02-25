@@ -5,35 +5,55 @@ export function FareCalculator(distance, time, rateDetails) {
     let gia_1km_10_15 = parseFloat(rateDetails.rate_per_kilometer_10_15);
     let gia_1km_15_30 = parseFloat(rateDetails.rate_per_kilometer_15_30);
     let gia_1km_30_ = parseFloat(rateDetails.rate_per_kilometer_30);
-    let price_estimate = gia_mo_cua;
-    let khoangcach = parseFloat(distance);
-
-    if (khoangcach >= 0 && khoangcach <= 10) {
-        let distance_1 = khoangcach - 1;
-        let price_estimate = price_estimate + (gia_1km_10 * distance_1);
+    var price_estimate = gia_mo_cua;
+    console.log('khoangcach 1 ' + distance);
+    var khoangcach = parseFloat(distance);
+    console.log('khoangcach ' + khoangcach);
+    if (khoangcach >= 1000) {
+        var distance_1 = khoangcach - 1000;
+        if (distance_1 <= 9000) {
+            price_estimate = price_estimate + (gia_1km_10 * distance_1 / 1000);
+        } else {
+            price_estimate = price_estimate + (gia_1km_10 * 9000 / 1000);
+        }
     }
+    console.log('price_estimate ' + price_estimate);
 
-    if (khoangcach > 10 && khoangcach <= 15) {
-        let distance_2 = khoangcach - 10;
-        let price_estimate = price_estimate + (gia_1km_10_15 * distance_2);
+    if (khoangcach > 10000) {
+        var distance_2 = khoangcach - 10000;
+        if (distance_2 <= 5000) {
+            price_estimate = price_estimate + (gia_1km_10_15 * distance_2 / 1000);
+        } else {
+            price_estimate = price_estimate + (gia_1km_10_15 * 5000 / 1000);
+        }
+
+        console.log('price_estimate10 ' + price_estimate);
     }
+    console.log('price_estimate 2 ' + price_estimate);
+    if (khoangcach > 15000) {
+        var distance_3 = khoangcach - 15000;
+        if (distance_3 <= 15000) {
+            price_estimate = price_estimate + (gia_1km_15_30 * distance_3 / 1000);
+        } else {
+            price_estimate = price_estimate + (gia_1km_15_30 * 15000 / 1000);
+        }
 
-    if (khoangcach > 15 && khoangcach <= 30) {
-        let distance_3 = khoangcach - 15;
-        let price_estimate = price_estimate + (gia_1km_15_30 * distance_3);
     }
+    console.log('price_estimate 3 ' + price_estimate);
+    if (khoangcach > 30000) {
+        var distance_4 = khoangcach - 30000;
+        price_estimate = price_estimate + (gia_1km_30_ * distance_4 / 1000);
 
-    if (khoangcach > 30) {
-        let distance_4 = khoangcach - 30;
-        let price_estimate = price_estimate + (gia_1km_30_ * distance_4);
     }
-
+    console.log('price_estimate 4 ' + price_estimate);
     // let baseCalculated = ((parseFloat(rateDetails.rate_per_kilometer) * (parseFloat(distance) / 1000))) + ((parseFloat(rateDetails.rate_per_hour) * (parseFloat(time) / 3600)));
 
     let baseCalculated = price_estimate;
     let total = baseCalculated;
     let convenienceFee = (total * parseFloat(rateDetails.convenience_fees) / 100);
     let grand = total;
+
+    console.log('convenienceFee ' + convenienceFee);
 
     return {
         totalCost: parseFloat(total.toFixed(2)),
