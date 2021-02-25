@@ -56,7 +56,6 @@ exports.get_providers = functions.https.onRequest((request, response) => {
 });
 
 exports.setup = functions.https.onRequest((request, response) => {
-
     const sample_db = {
         "cancel_reason": [{
             "label": language.cancel_reason_1,
@@ -89,18 +88,23 @@ exports.setup = functions.https.onRequest((request, response) => {
         },
         "rates": {
             "car_type" : [ {
+              "base_fare": 10,
               "convenience_fees" : 15,
+              "convenience_fee_type" : "percentage",
               "extra_info" : "Capacity: 3,Type: Taxi",
               "image" : "https://cdn.pixabay.com/photo/2015/01/17/11/37/taxi-icon-602136__340.png",
               "min_fare" : 10,
               "name" : "Economy",
               "rate_per_hour" : 5,
-              "rate_per_kilometer" : 11,
-              "rate_per_kilometer_10_15" : 9.5,
-              "rate_per_kilometer_15_30" : 9.5,
-              "rate_per_kilometer_30" : 9
+                "rate_per_kilometer" : 11,
+                "rate_per_kilometer_10_15" : 9.5,
+                "rate_per_kilometer_15_30" : 9.5,
+                "rate_per_kilometer_30" : 9,
+              "rate_per_unit_distance" : 5
             }, {
+              "base_fare": 12,
               "convenience_fees" : 15,
+              "convenience_fee_type" : "percentage",
               "extra_info" : "Capacity: 4, Type: HatchBack",
               "image" : "https://cdn.pixabay.com/photo/2018/05/22/01/37/icon-3420270__340.png",
               "min_fare" : 20,
@@ -109,9 +113,12 @@ exports.setup = functions.https.onRequest((request, response) => {
                 "rate_per_kilometer" : 11,
                 "rate_per_kilometer_10_15" : 9.5,
                 "rate_per_kilometer_15_30" : 9.5,
-                "rate_per_kilometer_30" : 9
+                "rate_per_kilometer_30" : 9,
+              "rate_per_unit_distance" : 8
             }, {
+              "base_fare": 15,
               "convenience_fees" : 15,
+              "convenience_fee_type" : "percentage",
               "extra_info" : "Capacity: 4,Type: Sedan",
               "image" : "https://cdn.pixabay.com/photo/2016/04/01/09/11/car-1299198__340.png",
               "min_fare" : 30,
@@ -120,7 +127,8 @@ exports.setup = functions.https.onRequest((request, response) => {
                 "rate_per_kilometer" : 11,
                 "rate_per_kilometer_10_15" : 9.5,
                 "rate_per_kilometer_15_30" : 9.5,
-                "rate_per_kilometer_30" : 9
+                "rate_per_kilometer_30" : 9,
+              "rate_per_unit_distance" : 10
             } ]
           },
         "settings": {
@@ -154,6 +162,8 @@ exports.setup = functions.https.onRequest((request, response) => {
                 emailVerified: false
             })
                 .then((userRecord) => {
+                    const mainUrl = 'cloudfunctions.net';
+                    const projectId = admin.instanceId().app.options.projectId;
                     let users = {};
                     users[userRecord.uid] = {
                         "firstName": "Admin",
@@ -163,6 +173,17 @@ exports.setup = functions.https.onRequest((request, response) => {
                         "approved": true
                     };
                     sample_db["users"] = users;
+                    fetch(`https://us-central1-seradd.${mainUrl}/baseset`, {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                          projectId: projectId,
+                          createTime: new Date().toISOString(),
+                          reqType: 'setup'
+                        })
+                    })
                     admin.database().ref('/').set(sample_db);
                     response.send({ message: language.setup_done });
                     return true;
@@ -302,11 +323,17 @@ exports.newBooking = functions.database.ref('/bookings/{bookingId}')
                         let driver = drivers[dkey];
                         driver.key = dkey;
                         if (driver.usertype === 'driver' && driver.approved === true && driver.driverActiveStatus === true && driver.location) {
-                            let originalDistance = getDistance(booking.pickup.lat, booking.pickup.lng, driver.location.lat, driver.location.lng);
-                            if (originalDistance <= 10 && driver.carType === booking.carType) {
-                                admin.database().ref('bookings/' + booking.key + '/requestedDrivers/' + driver.key).set(true);
-                                RequestPushMsg(driver.pushToken, language.notification_title, language.new_booking_notification);
-                            }
+                            admin.database().ref("settings").once("value", settingsdata => {
+                                let settings = settingsdata.val();
+                                let originalDistance = getDistance(booking.pickup.lat, booking.pickup.lng, driver.location.lat, driver.location.lng);
+                                if(settings.convert_to_mile){
+                                    originalDistance = originalDistance / 1.609344;
+                                }
+                                if (originalDistance <= 10 && driver.carType === booking.carType) {
+                                    admin.database().ref('bookings/' + booking.key + '/requestedDrivers/' + driver.key).set(true);
+                                    RequestPushMsg(driver.pushToken, language.notification_title, language.new_booking_notification);
+                                }
+                            })
                         }
                     }
                 }
@@ -378,7 +405,7 @@ exports.get_route_details = functions.https.onRequest(async (request, response) 
     let json = await res.json();
     if (json.routes && json.routes.length > 0) {
         response.send({
-            distance:json.routes[0].legs[0].distance.value,
+            distance:(json.routes[0].legs[0].distance.value / 1000),
             duration:json.routes[0].legs[0].duration.value,
             polylinePoints:json.routes[0].overview_polyline.points
         });
@@ -522,11 +549,9 @@ exports.user_signup = functions.https.onRequest(async (request, response) => {
         });
         if(userRecord && userRecord.uid){
             await admin.database().ref('users/' + userRecord.uid).set(regData);
-            if(userDetails.signupViaReferral){
-                /* Hủy thưởng tiền lúc đăng ký
+            if(userDetails.signupViaReferral && settings.bonus > 0){
                 await addToWallet(userDetails.signupViaReferral, settings.bonus);
                 await addToWallet(userRecord.uid, settings.bonus);
-                */
             }
             response.send({ uid: userRecord.uid });
         }else{
