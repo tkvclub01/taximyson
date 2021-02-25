@@ -9,7 +9,7 @@ import CircularLoading from "../components/CircularLoading";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Grid from '@material-ui/core/Grid';
-import { 
+import {
   features,
   language
 } from 'config';
@@ -63,18 +63,21 @@ const Settings = (props) => {
     bonus: 0,
     bonusd: 0,
     panic: '',
-    otp_secure:false,
-    driver_approval:false,
-    email_verify:false,
-    CarHornRepeat:false,
-    CompanyName:'',
-    CompanyWebsite:'',
+    otp_secure: false,
+    driver_approval: false,
+    email_verify: false,
+    CarHornRepeat: false,
+    CompanyName: '',
+    CompanyWebsite: '',
     CompanyTerms: '',
     TwitterHandle: '',
     FacebookHandle: '',
     InstagramHandle: '',
     AppleStoreLink: '',
-    PlayStoreLink: ''
+    PlayStoreLink: '',
+    license: '',
+    contact_email: '',
+    convert_to_mile: false
   });
   const [clicked, setClicked] = useState(false);
 
@@ -93,7 +96,7 @@ const Settings = (props) => {
   };
 
   const handleBonusChange = (e) => {
-    setData({ ...data, bonus: parseFloat(e.target.value)>=0?parseFloat(e.target.value):'' });
+    setData({ ...data, bonus: parseFloat(e.target.value) >= 0 ? parseFloat(e.target.value) : '' });
   };
 
     const handleBonusdChange = (e) => {
@@ -103,15 +106,14 @@ const Settings = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(features.AllowCriticalEditsAdmin){
-      if(data.bonus === ''){
+    if (features.AllowCriticalEditsAdmin) {
+      if (data.bonus === '') {
         alert(language.proper_bonus)
-      }else{
+      } else {
         setClicked(true);
         dispatch(editSettings(data));
-        alert(language.updated);
       }
-    }else{
+    } else {
       alert(language.demo_mode);
     }
   }
@@ -126,221 +128,261 @@ const Settings = (props) => {
       <form className={classes.form} onSubmit={handleSubmit}>
         <Grid container spacing={2} >
           <Grid item xs={12} sm={12} md={6} lg={6}>
-              <Typography component="h1" variant="h5">
-                {language.settings_title}
-              </Typography>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="symbol"
-                label={language.currency_symbol}
-                name="symbol"
-                autoComplete="symbol"
-                onChange={handleTextChange}
-                value={data.symbol}
-                autoFocus
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="code"
-                label={language.currency_code}
-                name="code"
-                autoComplete="code"
-                onChange={handleTextChange}
-                value={data.code}
-              />
-              <Typography component="h1" variant="h5" style={{ marginTop: '30px' }}>
-                {language.referral_bonus}
-              </Typography>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                id="bonus"
-                label={language.referral_bonus}
-                name="bonus"
-                autoComplete="bonus"
-                onChange={handleBonusChange}
-                value={data.bonus}
-              />
-
-              <Typography component="h1" variant="h5" style={{ marginTop: '30px' }}>
-                  {language.referral_bonus_driver}
-              </Typography>
-              <TextField
+            <Typography component="h1" variant="h5">
+              {language.currency_settings}
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6} md={6} lg={6}>
+                <TextField
                   variant="outlined"
                   margin="normal"
+                  required
                   fullWidth
-                  id="bonusd"
-                  label={language.referral_bonus_driver}
-                  name="bonusd"
-                  autoComplete="bonusd"
-                  onChange={handleBonusdChange}
-                  value={data.bonusd}
-              />
-
-              <Typography component="h1" variant="h5" style={{ marginTop: '30px' }}>
-                {language.security_title}
-              </Typography>
-              <TextField
+                  id="symbol"
+                  label={language.currency_symbol}
+                  name="symbol"
+                  autoComplete="symbol"
+                  onChange={handleTextChange}
+                  value={data.symbol}
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={6} lg={6}>
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="code"
+                  label={language.currency_code}
+                  name="code"
+                  autoComplete="code"
+                  onChange={handleTextChange}
+                  value={data.code}
+                />
+              </Grid>
+            </Grid>
+            <Typography component="h1" variant="h5">
+              {language.referral_bonus}
+            </Typography>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="bonus"
+              label={language.referral_bonus}
+              name="bonus"
+              autoComplete="bonus"
+              onChange={handleBonusChange}
+              value={data.bonus}
+            />
+            <Typography component="h1" variant="h5" style={{ marginTop: '30px' }}>
+              {language.referral_bonus_driver}
+            </Typography>
+            <TextField
                 variant="outlined"
                 margin="normal"
                 fullWidth
-                id="panic"
-                label={language.panic_num}
-                name="panic"
-                autoComplete="panic"
-                onChange={handleTextChange}
-                value={data.panic}
-              />
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={data.otp_secure}
-                    onChange={handleSwitchChange}
-                    name="otp_secure"
-                    color="primary"
-                  />
-                }
-                label={language.settings_label3}
-              />
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={data.driver_approval}
-                    onChange={handleSwitchChange}
-                    name="driver_approval"
-                    color="primary"
-                  />
-                }
-                label={language.settings_label4}
-              />
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={data.email_verify}
-                    onChange={handleSwitchChange}
-                    name="email_verify"
-                    color="primary"
-                  />
-                }
-                label={language.settings_label5}
-              />
-              <Typography component="h1" variant="h5" style={{ marginTop: '30px' }}>
-                {language.advance_settings}
-              </Typography>
-              <FormControlLabel style={{ marginTop: '15px' }}
-                control={
-                  <Switch
-                    checked={data.CarHornRepeat}
-                    onChange={handleSwitchChange}
-                    name="CarHornRepeat"
-                    color="primary"
-                  />
-                }
-                label={language.car_horn_repeat}
-              />
+                id="bonusd"
+                label={language.referral_bonus_driver}
+                name="bonusd"
+                autoComplete="bonusd"
+                onChange={handleBonusdChange}
+                value={data.bonusd}
+            />
+            <Typography component="h1" variant="h5" style={{marginTop:8}}>
+              {language.security_title}
+            </Typography>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="panic"
+              label={language.panic_num}
+              name="panic"
+              autoComplete="panic"
+              onChange={handleTextChange}
+              value={data.panic}
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={data.otp_secure}
+                  onChange={handleSwitchChange}
+                  name="otp_secure"
+                  color="primary"
+                />
+              }
+              label={language.settings_label3}
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={data.driver_approval}
+                  onChange={handleSwitchChange}
+                  name="driver_approval"
+                  color="primary"
+                />
+              }
+              label={language.settings_label4}
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={data.email_verify}
+                  onChange={handleSwitchChange}
+                  name="email_verify"
+                  color="primary"
+                />
+              }
+              label={language.settings_label5}
+            />
+            <Typography component="h1" variant="h5" style={{marginTop:'10px'}}>
+              {language.advance_settings}
+            </Typography>
+            <FormControlLabel style={{ marginTop: '10px' }}
+              control={
+                <Switch
+                  checked={data.CarHornRepeat}
+                  onChange={handleSwitchChange}
+                  name="CarHornRepeat"
+                  color="primary"
+                />
+              }
+              label={language.car_horn_repeat}
+            />
+            <FormControlLabel style={{ marginTop: '10px' }}
+              control={
+                <Switch
+                  checked={data.convert_to_mile}
+                  onChange={handleSwitchChange}
+                  name="convert_to_mile"
+                  color="primary"
+                />
+              }
+              label={language.convert_to_mile}
+            />
+            <Typography component="h1" variant="h5" style={{marginTop:8}}>
+              {language.purchase_settings_title}
+            </Typography>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="license"
+              label={language.purchase_code}
+              name="license"
+              autoComplete="license"
+              onChange={handleTextChange}
+              value={data.license}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="contact_email"
+              label={language.contact_email}
+              name="contact_email"
+              autoComplete="contact_email"
+              onChange={handleTextChange}
+              value={data.contact_email}
+            />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={6}>
-              <Typography component="h1" variant="h5">
-                {language.app_info}
-              </Typography>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="CompanyName"
-                label={language.CompanyName}
-                name="CompanyName"
-                autoComplete="CompanyName"
-                onChange={handleTextChange}
-                value={data.CompanyName}
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="CompanyWebsite"
-                label={language.CompanyWebsite}
-                name="CompanyWebsite"
-                autoComplete="CompanyWebsite"
-                onChange={handleTextChange}
-                value={data.CompanyWebsite}
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="CompanyTerms"
-                label={language.terms}
-                name="CompanyTerms"
-                autoComplete="CompanyTerms"
-                onChange={handleTextChange}
-                value={data.CompanyTerms}
-              />
-               <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                id="FacebookHandle"
-                label={language.FacebookHandle}
-                name="FacebookHandle"
-                autoComplete="FacebookHandle"
-                onChange={handleTextChange}
-                value={data.FacebookHandle}
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                id="TwitterHandle"
-                label={language.TwitterHandle}
-                name="TwitterHandle"
-                autoComplete="TwitterHandle"
-                onChange={handleTextChange}
-                value={data.TwitterHandle}
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                id="InstagramHandle"
-                label={language.InstagramHandle}
-                name="InstagramHandle"
-                autoComplete="InstagramHandle"
-                onChange={handleTextChange}
-                value={data.InstagramHandle}
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                id="AppleStoreLink"
-                label={language.AppleStoreLink}
-                name="AppleStoreLink"
-                autoComplete="AppleStoreLink"
-                onChange={handleTextChange}
-                value={data.AppleStoreLink}
-              />        
-              <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                id="PlayStoreLink"
-                label={language.PlayStoreLink}
-                name="PlayStoreLink"
-                autoComplete="PlayStoreLink"
-                onChange={handleTextChange}
-                value={data.PlayStoreLink}
-              /> 
+            <Typography component="h1" variant="h5">
+              {language.app_info}
+            </Typography>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="CompanyName"
+              label={language.CompanyName}
+              name="CompanyName"
+              autoComplete="CompanyName"
+              onChange={handleTextChange}
+              value={data.CompanyName}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="CompanyWebsite"
+              label={language.CompanyWebsite}
+              name="CompanyWebsite"
+              autoComplete="CompanyWebsite"
+              onChange={handleTextChange}
+              value={data.CompanyWebsite}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="CompanyTerms"
+              label={language.terms}
+              name="CompanyTerms"
+              autoComplete="CompanyTerms"
+              onChange={handleTextChange}
+              value={data.CompanyTerms}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="FacebookHandle"
+              label={language.FacebookHandle}
+              name="FacebookHandle"
+              autoComplete="FacebookHandle"
+              onChange={handleTextChange}
+              value={data.FacebookHandle}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="TwitterHandle"
+              label={language.TwitterHandle}
+              name="TwitterHandle"
+              autoComplete="TwitterHandle"
+              onChange={handleTextChange}
+              value={data.TwitterHandle}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="InstagramHandle"
+              label={language.InstagramHandle}
+              name="InstagramHandle"
+              autoComplete="InstagramHandle"
+              onChange={handleTextChange}
+              value={data.InstagramHandle}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="AppleStoreLink"
+              label={language.AppleStoreLink}
+              name="AppleStoreLink"
+              autoComplete="AppleStoreLink"
+              onChange={handleTextChange}
+              value={data.AppleStoreLink}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="PlayStoreLink"
+              label={language.PlayStoreLink}
+              name="PlayStoreLink"
+              autoComplete="PlayStoreLink"
+              onChange={handleTextChange}
+              value={data.PlayStoreLink}
+            />
           </Grid>
         </Grid>
         <Grid container>
@@ -353,11 +395,11 @@ const Settings = (props) => {
               className={classes.submit}
             >
               {language.submit}
-            </Button> 
+            </Button>
           </Grid>
         </Grid>
         <AlertDialog open={settingsdata.error.flag && clicked} onClose={handleClose}>{language.update_failed}</AlertDialog>
-      </form> 
+      </form>
   );
 
 }

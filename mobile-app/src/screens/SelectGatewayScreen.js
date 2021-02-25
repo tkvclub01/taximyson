@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, StyleSheet, TouchableHighlight, Image, TouchableWithoutFeedback, Text, Alert } from 'react-native';
+import { View, StyleSheet, Image, TouchableWithoutFeedback, Text, Alert } from 'react-native';
 import { Header, } from 'react-native-elements';
 import { language } from 'config';
 import { colors } from '../common/theme';

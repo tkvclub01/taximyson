@@ -57,7 +57,7 @@ export default function DriverTrips(props) {
         } else {
             Alert.alert(
                 language.alert,
-                language.wallet_balance_negetive
+                language.wallet_balance_negative
             );
         }
     };
@@ -158,11 +158,11 @@ export default function DriverTrips(props) {
                                     <Text style={styles.listDate}>{new Date(item.tripdate).toLocaleString(dateStyle)}</Text>
                                 </View>
                                 <View style={styles.rateViewStyle}>
-                                    <Text style={styles.rateViewTextStyle}>{item ? item.estimate > 0 ? parseFloat(item.estimate).toFixed(0) : 0 : null} {settings.symbol}</Text>
+                                    <Text style={styles.rateViewTextStyle}>{settings.symbol}{item ? item.estimate > 0 ? parseFloat(item.estimate).toFixed(2) : 0 : null}</Text>
                                 </View>
                                 <View style={styles.estimateView}>
-                                    <Text style={styles.listEstimate}>{item.estimateDistance? (item.estimateDistance/1000).toFixed(1): 0} {language.km}</Text>
-                                    <Text style={styles.listEstimate}>{item.estimateTime? (item.estimateTime/60).toFixed(0): 0} {language.mins}</Text>
+                                    <Text style={styles.listEstimate}>{item.estimateDistance? parseFloat(item.estimateDistance).toFixed(2): 0} {settings.convert_to_mile? language.mile : language.km}</Text>
+                                    <Text style={styles.listEstimate}>{item.estimateTime? parseFloat(item.estimateTime/60).toFixed(0): 0} {language.mins}</Text>
                                 </View>
                                 <View style={styles.addressViewStyle}>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>

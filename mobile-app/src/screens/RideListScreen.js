@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 export default function RideListPage(props) {
     const bookings = useSelector(state => state.bookinglistdata.bookings);
     const [bookingData,setBookingData] = useState([]);
+    
 
     useEffect(()=>{
         if(bookings){

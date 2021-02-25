@@ -87,7 +87,9 @@ export default function AppCommon({ children }) {
   }
 
   const stopPlaying = async () => {
-    sound.stopAsync();
+    if(sound){
+      sound.stopAsync();
+    }
   }
 
   useEffect(() => {;

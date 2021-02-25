@@ -39,6 +39,8 @@ export default function MapScreen(props) {
     } = api;
     const dispatch = useDispatch();
 
+    const auth = useSelector(state => state.auth);
+    const settings = useSelector(state => state.settingsdata.settings);
     const cars = useSelector(state => state.cartypes.cars);
     const tripdata = useSelector(state => state.tripdata);
     const drivers = useSelector(state => state.usersdata.users);
@@ -238,6 +240,9 @@ export default function MapScreen(props) {
                 if ((driver.usertype) && (driver.usertype == 'driver') && (driver.approved == true) && (driver.queue == false) && (driver.driverActiveStatus == true)) {
                     if (driver.location) {
                         let distance = GetDistance(tripdata.pickup.lat, tripdata.pickup.lng, driver.location.lat, driver.location.lng);
+                        if(settings.convert_to_mile){
+                            distance = distance / 1.609344;
+                        }
                         if (distance < 10) {
                             let destLoc = '"' + driver.location.lat + ', ' + driver.location.lng + '"';
                             driver.arriveDistance = distance;
@@ -315,10 +320,15 @@ export default function MapScreen(props) {
 
     const tapAddress = (selection) => {
         if (selection === tripdata.selected) {
+            let savedAddresses = [];
+            let allAddresses = auth.info.profile.savedAddresses;
+            for (let key in allAddresses) {
+                savedAddresses.push(allAddresses[key]);
+            }
             if (selection == 'drop') {
-                props.navigation.navigate('Search', { locationType: "drop" });
+                props.navigation.navigate('Search', { locationType: "drop", savedAddresses: savedAddresses });
             } else {
-                props.navigation.navigate('Search', { locationType: "pickup" });
+                props.navigation.navigate('Search', { locationType: "pickup", savedAddresses: savedAddresses  });
             }
         } else {
             dispatch(updatSelPointType(selection));

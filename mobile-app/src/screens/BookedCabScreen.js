@@ -114,7 +114,7 @@ export default function BookedCabScreen(props) {
         let startLoc = '"' + point1.lat + ',' + point1.lng + '"';
         let destLoc = '"' + point2.lat + ',' + point2.lng + '"';
         getRouteDetails(startLoc, destLoc).then((details) => {
-            setArrivalTime(details.duration? (details.duration/60).toFixed(0): 0);
+            setArrivalTime(details.duration? parseFloat(details.duration/60).toFixed(0): 0);
             let points = Polyline.decode(details.polylinePoints);
             let coords = points.map((point, index) => {
                 return {

@@ -21,7 +21,7 @@ export default function Promos() {
       {
           title: language.title,
           field: 'promo_discount_type',
-          lookup: { flat: 'Flat', percentage: 'Percentage' },
+          lookup: { flat: language.flat, percentage: language.percentage },
       },
       { title: language.promo_discount_value,field: 'promo_discount_value', type: 'numeric'},
       { title: language.max_limit, field: 'max_promo_discount_value', type: 'numeric' },

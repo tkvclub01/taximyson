@@ -254,9 +254,14 @@ export default function ProfileScreen(props) {
                                 <TouchableOpacity 
                                     style={{marginLeft: 20}}
                                     onPress={()=>{
+                                        settings.bonus>0?
                                         Share.share({
                                             message: language.share_msg + settings.code + ' ' + settings.bonus + ".\n"  +  language.code_colon +  auth.info.profile.referralId  + "\n" + language.app_link + (Platform.OS=="ios"? settings.AppleStoreLink : settings.PlayStoreLink)
-                                        });
+                                        })
+                                        :
+                                        Share.share({
+                                            message: language.share_msg_no_bonus + "\n"  + language.app_link + (Platform.OS=="ios"? settings.AppleStoreLink : settings.PlayStoreLink)
+                                        })
                                     }}
                                 >
                                     <Icon
@@ -281,6 +286,21 @@ export default function ProfileScreen(props) {
                             <Text style={styles.text2}>{profileData ? profileData.usertype : ''}</Text>
                         </View>
                     </View>
+                    {profileData && profileData.usertype == 'driver'?
+                    <View style={styles.myViewStyle}>
+                        <View style={styles.iconViewStyle}>
+                            <Icon
+                                name='car-outline'
+                                type='ionicon'
+                                color={colors.GREY.btnPrimary}
+                            />
+                            <Text style={styles.emailStyle}>{language.car_type}</Text>
+                        </View>
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.text2}>{profileData.carType}</Text>
+                        </View>
+                    </View>
+                    :null}
                     {profileData && profileData.usertype == 'driver'?
                     <View style={styles.myViewStyle}>
                         <View style={styles.iconViewStyle}>
@@ -437,13 +457,13 @@ const styles = StyleSheet.create({
     },
     newViewStyle: {
         flex: 1,
-        height: 300,
-        marginTop: 40
+        marginTop: 10
     },
     myViewStyle: {
         flex: 1,
         left: 20,
         marginRight: 40,
+        marginBottom: 8,
         borderBottomColor: colors.GREY.btnSecondary,
         borderBottomWidth: 1
     },
@@ -511,7 +531,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     flexView3: {
-        marginTop: 54
+        marginTop: 10
     },
     loadingcontainer: {
         flex: 1,

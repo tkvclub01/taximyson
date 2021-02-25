@@ -4,7 +4,9 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { colors } from '../common/theme';
 import {
     Google_Map_Key,
-    language
+    language,
+    features,
+    default_country_code
 } from 'config';
 import { useDispatch } from 'react-redux';
 import { FirebaseContext } from 'common/src';
@@ -18,31 +20,57 @@ export default function SearchScreen(props) {
     } = api;
     const dispatch = useDispatch();
     const locationType = props.navigation.getParam('locationType');
+    const savedAddresses = props.navigation.getParam('savedAddresses');
+
+    if(features.AllowCountrySelection == false){
+
+    }
 
     const updateLocation = (data) => {
-        fetchCoordsfromPlace(data.place_id).then((res)=>{
-            if(res && res.lat){
+        if(data.place_id){
+            fetchCoordsfromPlace(data.place_id).then((res)=>{
+                if(res && res.lat){
+                    if(locationType=='pickup'){
+                        dispatch(updateTripPickup({
+                            lat:res.lat,
+                            lng:res.lng,
+                            add:data.description,
+                            source: 'search'
+                        }));
+                    }else{
+                        dispatch(updateTripDrop({
+                            lat:res.lat,
+                            lng:res.lng,
+                            add:data.description,
+                            source: 'search'
+                        }));
+                    }
+                    props.navigation.pop();
+                }else{
+                    Alert.alert(language.alert,language.place_to_coords_error);
+                }
+            });
+        } else {
+            if(data.description){
                 if(locationType=='pickup'){
                     dispatch(updateTripPickup({
-                        lat:res.lat,
-                        lng:res.lng,
+                        lat:data.lat,
+                        lng:data.lng,
                         add:data.description,
                         source: 'search'
                     }));
                 }else{
                     dispatch(updateTripDrop({
-                        lat:res.lat,
-                        lng:res.lng,
+                        lat:data.lat,
+                        lng:data.lng,
                         add:data.description,
                         source: 'search'
                     }));
                 }
-
                 props.navigation.pop();
-            }else{
-                Alert.alert(language.alert,language.place_to_coords_error);
             }
-        });
+        }
+
     }
 
     return (
@@ -63,10 +91,20 @@ export default function SearchScreen(props) {
                 updateLocation(data);
             }}
 
-            query={{
-                key: Google_Map_Key,
-                language: 'en', // language of the results
-            }}
+            query={
+                features.AllowCountrySelection?
+                {
+                    key: Google_Map_Key,
+                    language: 'en',
+                }
+                :
+                {
+                    key: Google_Map_Key,
+                    language: 'en',
+                    components: 'country:' + default_country_code.code.toLowerCase()
+                }
+            }
+            predefinedPlaces = {savedAddresses}
 
             styles={{
                 container: {
@@ -76,9 +114,10 @@ export default function SearchScreen(props) {
                 textInputContainer: {
                     width: '100%',
                 },
+
                 description: {
-                    fontWeight: 'bold',
-                    color: colors.WHITE
+                    color: colors.WHITE,
+                    fontWeight: 'bold'
                 },
                 predefinedPlacesDescription: {
                     color: colors.BLUE.light

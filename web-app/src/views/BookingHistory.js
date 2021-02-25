@@ -33,6 +33,8 @@ const BookingHistory = () => {
       { title: language.trip_cost, field: 'trip_cost' },
       { title: language.trip_start_time, field: 'trip_start_time' },
       { title: language.trip_end_time, field: 'trip_end_time' },
+      { title: language.total_time, field: 'total_trip_time' },
+      { title: language.distance, field: 'distance' },
       { title: language.vehicle_no, field: 'vehicle_number' },  
       { title: language.trip_cost_driver_share, field: 'driver_share'},
       { title: language.convenience_fee, field: 'convenience_fees'},

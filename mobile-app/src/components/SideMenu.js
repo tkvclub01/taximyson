@@ -123,9 +123,14 @@ export default function SideMenu(props){
                                 <TouchableOpacity 
                                     style={{marginLeft: 20}}
                                     onPress={()=>{
+                                        settings.bonus>0?
                                         Share.share({
                                             message: language.share_msg + settings.code + ' ' + settings.bonus + ".\n"  +  language.code_colon +  auth.info.profile.referralId  + "\n" + language.app_link + (Platform.OS=="ios"? settings.AppleStoreLink : settings.PlayStoreLink)
-                                        });
+                                        })
+                                        :
+                                        Share.share({
+                                            message: language.share_msg_no_bonus + "\n"  + language.app_link + (Platform.OS=="ios"? settings.AppleStoreLink : settings.PlayStoreLink)
+                                        })
                                     }}
                                     style={
                                         [styles.menuItemView, { marginTop: (index == sideMenuList.length - 1) ? width / 7 : 0 }]

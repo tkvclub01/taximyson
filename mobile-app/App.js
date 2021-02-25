@@ -20,7 +20,7 @@ import {
 import  {
   FirebaseProvider,
   store
-} from "common/src";
+} from 'common/src';
 import AppCommon from './AppCommon';
 
 Notifications.setNotificationHandler({
