@@ -16,7 +16,10 @@ export const MainConfig = {
         appId: "1:314152728806:web:0a44038141bcfc31e16327",
         measurementId: "G-2N8Z2W0NL7"
     },
-
     Google_Map_Key: "AIzaSyCr0ZL88tPYjkHuWG2LROdySANxxAwp7eg",
-    facebookAppId: "461982721831486"
+    facebookAppId: "461982721831486",
+    PurchaseDetails: {
+        CodeCanyon_Purchase_Code: "71940451-60a5-4743-ab02-52c118f28b70",
+        Buyer_Email_Address: "tkvclub01@hotmail.com"
+    }
 }

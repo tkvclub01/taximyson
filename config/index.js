@@ -15,18 +15,22 @@ const AppDetails = MainConfig.AppDetails;
 const FirebaseConfig = MainConfig.FirebaseConfig;
 const Google_Map_Key = MainConfig.Google_Map_Key;
 const facebookAppId = MainConfig.facebookAppId;
+const PurchaseDetails = MainConfig.PurchaseDetails;
 
-const cloud_function_server_url = `https://us-central1-${FirebaseConfig.projectId}.cloudfunctions.net`;
+const mainUrl = "cloudfunctions.net";
+const cloud_function_server_url = `https://us-central1-${FirebaseConfig.projectId}.${mainUrl}`;
 
 export {
     AppDetails,
     language,
     FirebaseConfig,
     Google_Map_Key,
+    PurchaseDetails,
     dateStyle,
     facebookAppId,
     cloud_function_server_url,
     features,
     countries,
-    default_country_code
+    default_country_code,
+    mainUrl
 }
