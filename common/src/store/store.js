@@ -1,6 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
-import logger from "redux-logger";
+//import logger from "redux-logger";
 
 import { authreducer as auth } from "../reducers/authreducer";
 import { cartypesreducer as cartypes } from "../reducers/cartypesreducer";
@@ -44,6 +44,6 @@ const reducers = combineReducers({
   gpsdata
 });
 
-let middleware = [thunk,logger];
+let middleware = [thunk];
 
 export const store = createStore(reducers, {}, applyMiddleware(...middleware));

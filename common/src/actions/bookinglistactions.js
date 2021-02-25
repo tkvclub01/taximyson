@@ -9,7 +9,7 @@ import { store } from '../store/store';
 import { fetchBookingLocations } from '../actions/locationactions';
 import { RequestPushMsg } from '../other/NotificationFunctions';
 import { FareCalculator } from '../other/FareCalculator';
-import { GetTripDistance } from '../other/GeoFunctions';
+import { GetDistance,GetTripDistance } from '../other/GeoFunctions';
 import { fetchAddressfromCoords } from '../other/GoogleAPIFunctions';
 import { language, dateStyle } from 'config';
 
@@ -121,6 +121,7 @@ export const updateBooking = (booking) => (dispatch) => (firebase) => {
   }
   if (booking.status == 'REACHED') {
     let lastLocation = store.getState().locationdata.coords;
+    let settings = store.getState().settingsdata.settings;
 
     trackingRef(booking.id).push({
       at: new Date().getTime(),
@@ -132,7 +133,7 @@ export const updateBooking = (booking) => (dispatch) => (firebase) => {
     trackingRef(booking.id).orderByKey().once('value', async (snapshot)=>{  
       const data = snapshot.val();
       let res = await GetTripDistance(data);
-      let distance = res.distance;
+      let distance = settings.convert_to_mile? (res.distance / 1.609344) : res.distance;
 
       let latlng = lastLocation.lat + ',' + lastLocation.lng;
       fetchAddressfromCoords(latlng).then((address) => {
@@ -140,6 +141,32 @@ export const updateBooking = (booking) => (dispatch) => (firebase) => {
         drop['lat'] = lastLocation.lat;
         drop['lng'] = lastLocation.lng;
         drop['add'] = address;
+        singleUserRef(booking.customer).child('savedAddresses').once('value',savedAdd => {
+            if(savedAdd.val()){
+              let addresses = savedAdd.val();
+              let didNotMatch = true; 
+              for (let key in addresses) {
+                let entry = addresses[key];
+                if(GetDistance(entry.lat,entry.lng,drop.lat,drop.lng) < 0.1){
+                    didNotMatch = false;
+                    break;
+                }
+              }
+              if(didNotMatch){
+                singleUserRef(booking.customer).child('savedAddresses').push({
+                  description: drop.add,
+                  lat: drop.lat,
+                  lng: drop.lng
+                });
+              }  
+            }else{
+              singleUserRef(booking.customer).child('savedAddresses').push({
+                description: drop.add,
+                lat: drop.lat,
+                lng: drop.lng
+              });
+            }
+        });
 
         let cars = store.getState().cartypes.cars;
         let rates = {};
@@ -157,9 +184,9 @@ export const updateBooking = (booking) => (dispatch) => (firebase) => {
         booking.dropAddress = address;
         booking.trip_cost = fare.grandTotal;
         booking.trip_end_time = end_time.toLocaleTimeString(dateStyle);
-        booking.distance = distance;
-        booking.convenience_fees = fare.grandTotal - fare.convenience_fees;
-        booking.driver_share = fare.convenience_fees;
+        booking.distance = parseFloat(distance).toFixed(2);
+        booking.convenience_fees = fare.convenience_fees;
+        booking.driver_share = fare.grandTotal - fare.convenience_fees;
         booking.endTime = end_time.getTime();
         booking.total_trip_time = totalTimeTaken;
         booking.coords = res.coords;

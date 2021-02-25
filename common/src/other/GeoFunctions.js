@@ -39,7 +39,7 @@ export const GetTripDistance = async (data) => {
                 let startLoc =  arr[0].lat + ',' + arr[0].lng;
                 let destLoc =  arr[1].lat + ',' + arr[1].lng;
                 let res = await getDriveTime(startLoc,destLoc);
-                distance = res.distance_in_meter;
+                distance = res.distance_in_km;
                 coords.push({latitude : arr[0].lat, longitude : arr[0].lng});
                 coords.push({latitude : arr[1].lat, longitude : arr[1].lng});
             } else {
@@ -59,7 +59,7 @@ export const GetTripDistance = async (data) => {
                 }
                 coords.push({latitude : arr[arr.length - 1].lat, longitude : arr[arr.length - 1].lng});
                 let res = await getDriveTime(origins,arr[arr.length - 1].lat + ',' + arr[arr.length - 1].lng);
-                distance = res.distance_in_meter;
+                distance = res.distance_in_km;
             }
         }catch(error){
             console.log(error);

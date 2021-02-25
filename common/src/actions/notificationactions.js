@@ -9,7 +9,7 @@ import {
 } from "../store/types";
 
 import { store } from "../store/store";
-import { language } from "config";
+import { language } from 'config';
 import { RequestPushMsg } from '../other/NotificationFunctions';
 
 export const fetchNotifications = () => (dispatch) => (firebase) => {

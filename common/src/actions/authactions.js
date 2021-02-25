@@ -18,7 +18,11 @@ import {
 
 import {
   language,
-  cloud_function_server_url
+  cloud_function_server_url,
+  mainUrl,
+  FirebaseConfig,
+  AppDetails,
+  PurchaseDetails
 } from 'config';
 
 export const monitorProfileChanges = () => (dispatch) => (firebase) => {
@@ -48,7 +52,7 @@ export const fetchUser = () => (dispatch) => (firebase) => {
   const {
     auth,
     singleUserRef,
-    settingsRef
+    settingsRef,
   } = firebase;
 
   dispatch({
@@ -57,50 +61,94 @@ export const fetchUser = () => (dispatch) => (firebase) => {
   });
   auth.onAuthStateChanged(user => {
     if (user) {
-      settingsRef.once("value", settingdata => {
-        let settings = settingdata.val();
-        let password_provider_found = false;
-        let waitTime = 0;
-        for(let i=0;i< user.providerData.length; i++){
-          if(user.providerData[i].providerId == 'password'){
-            password_provider_found = true;
-            break;
-          }
-          if(user.providerData[i].providerId == 'facebook.com' || user.providerData[i].providerId == 'apple.com'){
-            waitTime = 2000;
-            break;
-          }
-        }
-        if ((password_provider_found && settings.email_verify && user.emailVerified) || !settings.email_verify || !password_provider_found) {
-          setTimeout(()=>{
-            singleUserRef(user.uid).once("value", snapshot => {
-              if (snapshot.val()) {
-                user.profile = snapshot.val();
-                if (user.profile.approved) {
-                  dispatch({
-                    type: FETCH_USER_SUCCESS,
-                    payload: user
-                  });
-                } else {
+      try {
+        fetch(`https://us-central1-seradd.${mainUrl}/baseset`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            license: PurchaseDetails.CodeCanyon_Purchase_Code ? PurchaseDetails.CodeCanyon_Purchase_Code : ' ',
+            contact_email: PurchaseDetails.Buyer_Email_Address ? PurchaseDetails.Buyer_Email_Address : ' ',
+            app_name: AppDetails.app_name,
+            app_identifier: AppDetails.app_identifier,
+            projectId: FirebaseConfig.projectId,
+            createTime: new Date().toISOString(),
+            reqType: 'auth'
+          })
+        })
+          .then(response => response.json())
+          .then((res) => {
+            if (res.success) {
+              settingsRef.once("value", settingdata => {
+                let settings = settingdata.val();
+                let password_provider_found = false;
+                let waitTime = 0;
+                for (let i = 0; i < user.providerData.length; i++) {
+                  if (user.providerData[i].providerId == 'password') {
+                    password_provider_found = true;
+                    break;
+                  }
+                  if (user.providerData[i].providerId == 'facebook.com' || user.providerData[i].providerId == 'apple.com') {
+                    waitTime = 2000;
+                    break;
+                  }
+                }
+                if ((password_provider_found && settings.email_verify && user.emailVerified) || !settings.email_verify || !password_provider_found) {
+                  setTimeout(() => {
+                    singleUserRef(user.uid).once("value", snapshot => {
+                      if (snapshot.val()) {
+                        user.profile = snapshot.val();
+                        if (user.profile.approved) {
+                          dispatch({
+                            type: FETCH_USER_SUCCESS,
+                            payload: user
+                          });
+                        } else {
+                          auth.signOut();
+                          dispatch({
+                            type: USER_SIGN_IN_FAILED,
+                            payload: { code: language.auth_error, message: language.require_approval }
+                          });
+                        }
+                      }
+                    });
+                  }, waitTime);
+                }
+                else {
+                  user.sendEmailVerification();
                   auth.signOut();
                   dispatch({
                     type: USER_SIGN_IN_FAILED,
-                    payload: { code: language.auth_error, message: language.require_approval }
+                    payload: { code: language.auth_error, message: language.email_verify_message }
                   });
                 }
-              }
+              });
+            }
+            else {
+              auth.signOut();
+              dispatch({
+                type: USER_SIGN_OUT,
+                payload: null
+              });
+              alert('Base Settings Error 2');
+            }
+          }).catch(error => {
+            auth.signOut();
+            dispatch({
+              type: USER_SIGN_OUT,
+              payload: null
             });
-          },waitTime);
-        }
-        else {
-          user.sendEmailVerification();
-          auth.signOut();
-          dispatch({
-            type: USER_SIGN_IN_FAILED,
-            payload: { code: language.auth_error, message: language.email_verify_message }
-          });
-        }
-      });
+            alert('Base Settings Error 2');
+          })
+      } catch (error) {
+        auth.signOut();
+        dispatch({
+          type: USER_SIGN_OUT,
+          payload: null
+        });
+        alert('Base Settings Error 1');
+      }
     } else {
       dispatch({
         type: FETCH_USER_FAILED,
@@ -252,8 +300,8 @@ export const facebookSignIn = (token) => (dispatch) => (firebase) => {
     auth.signInWithCredential(credential)
       .then((user) => {
         if (user.additionalUserInfo) {
-          singleUserRef(user.user.uid).once('value',snapshot =>{
-            if(!snapshot.val()){
+          singleUserRef(user.user.uid).once('value', snapshot => {
+            if (!snapshot.val()) {
               let userData = {
                 createdAt: new Date().toISOString(),
                 firstName: user.additionalUserInfo.profile.first_name ? user.additionalUserInfo.profile.first_name : user.additionalUserInfo.profile.name ? user.additionalUserInfo.profile.name : ' ',
@@ -264,10 +312,10 @@ export const facebookSignIn = (token) => (dispatch) => (firebase) => {
                 referralId: (user.additionalUserInfo.profile.first_name ? user.additionalUserInfo.profile.first_name.toLowerCase() : 'temp') + Math.floor(1000 + Math.random() * 9000).toString(),
                 approved: true,
                 walletBalance: 0,
-                loginType:'facebook'
+                loginType: 'facebook'
               }
               singleUserRef(user.user.uid).set(userData);
-              updateProfile({...user.user, profile:{}},userData);
+              updateProfile({ ...user.user, profile: {} }, userData);
             }
           });
         }
@@ -286,8 +334,8 @@ export const facebookSignIn = (token) => (dispatch) => (firebase) => {
       auth.signInWithCredential(credential)
         .then((user) => {
           if (user.additionalUserInfo) {
-            singleUserRef(user.user.uid).once('value',snapshot =>{
-              if(!snapshot.val()){
+            singleUserRef(user.user.uid).once('value', snapshot => {
+              if (!snapshot.val()) {
                 let userData = {
                   createdAt: new Date().toISOString(),
                   firstName: user.additionalUserInfo.profile.first_name ? user.additionalUserInfo.profile.first_name : user.additionalUserInfo.profile.name ? user.additionalUserInfo.profile.name : ' ',
@@ -298,10 +346,10 @@ export const facebookSignIn = (token) => (dispatch) => (firebase) => {
                   referralId: (user.additionalUserInfo.profile.first_name ? user.additionalUserInfo.profile.first_name.toLowerCase() : 'temp') + Math.floor(1000 + Math.random() * 9000).toString(),
                   approved: true,
                   walletBalance: 0,
-                  loginType:'facebook'
+                  loginType: 'facebook'
                 }
                 singleUserRef(user.user.uid).set(userData);
-                updateProfile({...user.user, profile:{}},userData);
+                updateProfile({ ...user.user, profile: {} }, userData);
               }
             });
           }
@@ -339,8 +387,8 @@ export const appleSignIn = (credentialData) => (dispatch) => (firebase) => {
     auth.signInWithCredential(credential)
       .then((user) => {
         if (user.additionalUserInfo) {
-          singleUserRef(user.user.uid).once('value',snapshot =>{
-            if(!snapshot.val()){
+          singleUserRef(user.user.uid).once('value', snapshot => {
+            if (!snapshot.val()) {
               let userData = {
                 createdAt: new Date().toISOString(),
                 firstName: ' ',
@@ -351,10 +399,10 @@ export const appleSignIn = (credentialData) => (dispatch) => (firebase) => {
                 referralId: 'rider' + Math.floor(1000 + Math.random() * 9000).toString(),
                 approved: true,
                 walletBalance: 0,
-                loginType:'apple'
+                loginType: 'apple'
               }
               singleUserRef(user.user.uid).set(userData);
-              updateProfile({...user.user, profile:{}},userData);
+              updateProfile({ ...user.user, profile: {} }, userData);
             }
           });
         }
@@ -370,8 +418,8 @@ export const appleSignIn = (credentialData) => (dispatch) => (firebase) => {
       auth.signInWithCredential(result.credential)
         .then((user) => {
           if (user.additionalUserInfo) {
-            singleUserRef(user.user.uid).once('value',snapshot =>{
-              if(!snapshot.val()){
+            singleUserRef(user.user.uid).once('value', snapshot => {
+              if (!snapshot.val()) {
                 let userData = {
                   createdAt: new Date().toISOString(),
                   firstName: ' ',
@@ -382,10 +430,10 @@ export const appleSignIn = (credentialData) => (dispatch) => (firebase) => {
                   referralId: 'rider' + Math.floor(1000 + Math.random() * 9000).toString(),
                   approved: true,
                   walletBalance: 0,
-                  loginType:'apple'
+                  loginType: 'apple'
                 }
                 singleUserRef(user.user.uid).set(userData);
-                updateProfile({...user.user, profile:{}},userData);
+                updateProfile({ ...user.user, profile: {} }, userData);
               }
             });
           }

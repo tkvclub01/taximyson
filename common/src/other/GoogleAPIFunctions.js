@@ -45,11 +45,11 @@ export const getRouteDetails = async (startLoc, destLoc) => {
 
 export const getDriveTime = (startLoc, destLoc) =>{
     return new Promise(function (resolve, reject) {
-        fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${startLoc}&destinations=${destLoc}&key=${Google_Map_Key}`)
+        fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${startLoc}&destinations=${destLoc}&key=${Google_Map_Key}`)
             .then((response) => response.json())
             .then((res) =>
                 resolve({
-                    distance_in_meter: res.rows[0].elements[0].distance.value,
+                    distance_in_km: res.rows[0].elements[0].distance.value / 1000,
                     time_in_secs: res.rows[0].elements[0].duration.value,
                     timein_text: res.rows[0].elements[0].duration.text
                 })
