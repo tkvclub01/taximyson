@@ -67,7 +67,7 @@ export default function AddMoneyScreen(props) {
 
   const newData = ({ item, index }) => {
     return (
-      <TouchableOpacity style={[styles.boxView, { backgroundColor: item.selected ? colors.GREY.default : colors.GREY.primary }]} onPress={() => { quckAdd(index); }}><Text style={styles.quckMoneyText, { color: item.selected ? colors.WHITE : colors.BLACK }} >{settings.symbol}{item.amount}</Text></TouchableOpacity>
+      <TouchableOpacity style={[styles.boxView, { backgroundColor: item.selected ? colors.GREY.default : colors.GREY.primary }]} onPress={() => { quckAdd(index); }}><Text style={[styles.quckMoneyText, { color: item.selected ? colors.WHITE : colors.BLACK }]} >{settings.symbol}{item.amount}</Text></TouchableOpacity>
     )
   }
 

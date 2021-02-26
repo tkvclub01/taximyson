@@ -1,4 +1,4 @@
-export const default_country_code = { code: 'IN', label: 'India', phone: '91' };
+export const default_country_code = { code: 'VN', label: 'Vietnam', phone: '84' };
 
 export const countries = [
     { code: 'VN', label: 'Vietnam', phone: '84' },

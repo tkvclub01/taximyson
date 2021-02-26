@@ -85,25 +85,25 @@ export default function App() {
 
 
   return (
-    assetsLoaded ?
-      <Provider store={store}>
-        <FirebaseProvider>
-          <AppCommon>
-            <AppContainer />
-          </AppCommon>
-        </FirebaseProvider>
-      </Provider>
-      :
-      <View style={styles.container}>
-        <ImageBackground
-          source={require('./assets/images/intro.jpg')}
-          resizeMode="stretch"
-          style={styles.imagebg}
-        >
-          <ActivityIndicator />
-          <Text style={{ paddingBottom: 100 }}>{updateMsg}</Text>
-        </ImageBackground>
-      </View>
+      assetsLoaded ?
+          <Provider store={store}>
+            <FirebaseProvider>
+              <AppCommon>
+                <AppContainer />
+              </AppCommon>
+            </FirebaseProvider>
+          </Provider>
+          :
+          <View style={styles.container}>
+            <ImageBackground
+                source={require('./assets/images/intro.jpg')}
+                resizeMode="stretch"
+                style={styles.imagebg}
+            >
+              <ActivityIndicator />
+              <Text style={{ paddingBottom: 100 }}>{updateMsg}</Text>
+            </ImageBackground>
+          </View>
   );
 }
 

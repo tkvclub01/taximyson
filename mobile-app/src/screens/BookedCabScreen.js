@@ -56,8 +56,12 @@ export default function BookedCabScreen(props) {
     const pageActive = useRef(false);
     const [lastCoords,setlastCoords] = useState();
     const [arrivalTime, setArrivalTime] = useState(0);
-
-
+    console.log("cancelReasonSelected")
+    console.log(cancelReasonSelected);
+    console.log("cancelReasons");
+    console.log(cancelReasons);
+    console.log("curBooking");
+    console.log(curBooking);
     useEffect(() => {
         setInterval(() => {
             if(pageActive.current && curBooking && lastLocation && (curBooking.status == 'ACCEPTED' || curBooking.status == 'STARTED')){

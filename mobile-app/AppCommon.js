@@ -76,7 +76,7 @@ export default function AppCommon({ children }) {
       playThroughEarpieceAndroid: false,
       useNativeControls: false
     });
-  
+
     const { sound } = await Audio.Sound.createAsync(settings.CarHornRepeat?require('./assets/sounds/car_horn_gap.wav'):require('./assets/sounds/car_horn.wav'));
     sound.setIsLoopingAsync(settings.CarHornRepeat);
     setSound(sound);
@@ -137,10 +137,10 @@ export default function AppCommon({ children }) {
 
   useEffect(() => {
     if (auth.info
-      && auth.info.profile
-      && auth.info.profile.usertype == 'driver'
-      && auth.info.profile.driverActiveStatus
-      && auth.info.profile.approved
+        && auth.info.profile
+        && auth.info.profile.usertype == 'driver'
+        && auth.info.profile.driverActiveStatus
+        && auth.info.profile.approved
     ) {
       if (!locationOn.current) {
         locationOn.current = true;
@@ -150,17 +150,17 @@ export default function AppCommon({ children }) {
               StartBackgroundLocation();
             }else{
               Alert.alert(
-                language.disclaimer,
-                language.disclaimer_text,
-                [
-                  { 
-                    text: language.ok, onPress: () => {
-                      AsyncStorage.setItem('firstRun', 'OK');
-                      StartBackgroundLocation();
+                  language.disclaimer,
+                  language.disclaimer_text,
+                  [
+                    {
+                      text: language.ok, onPress: () => {
+                        AsyncStorage.setItem('firstRun', 'OK');
+                        StartBackgroundLocation();
+                      }
                     }
-                  }
-                ],
-                { cancelable: false }
+                  ],
+                  { cancelable: false }
               );
             }
           });
@@ -170,10 +170,10 @@ export default function AppCommon({ children }) {
       }
     }
     if (auth.info
-      && auth.info.profile
-      && auth.info.profile.usertype == 'driver'
-      && auth.info.profile.driverActiveStatus == false
-      && auth.info.profile.approved
+        && auth.info.profile
+        && auth.info.profile.usertype == 'driver'
+        && auth.info.profile.driverActiveStatus == false
+        && auth.info.profile.approved
     ) {
       if (locationOn.current) {
         locationOn.current = false;
@@ -181,9 +181,9 @@ export default function AppCommon({ children }) {
       }
     }
     if (auth.info
-      && auth.info.profile
-      && auth.info.profile.usertype == 'rider'
-      && auth.info.profile.approved
+        && auth.info.profile
+        && auth.info.profile.usertype == 'rider'
+        && auth.info.profile.approved
     ) {
       if (!locationOn.current) {
         locationOn.current = true;
@@ -191,9 +191,9 @@ export default function AppCommon({ children }) {
       }
     }
     if (auth.info
-      && auth.info.profile
-      && auth.info.profile.approved
-      && (auth.info.profile.usertype == 'rider' || auth.info.profile.usertype == 'driver')) {
+        && auth.info.profile
+        && auth.info.profile.approved
+        && (auth.info.profile.usertype == 'rider' || auth.info.profile.usertype == 'driver')) {
       if (!tokenFetched.current) {
         tokenFetched.current = true;
         saveToken();
@@ -204,11 +204,11 @@ export default function AppCommon({ children }) {
   const saveToken = async () => {
     let token = await GetPushToken();
     dispatch(
-      api.updatePushToken(
-        auth.info,
-        token?token:'token_error',
-        Platform.OS == 'ios' ? 'IOS' : 'ANDROID'
-      )
+        api.updatePushToken(
+            auth.info,
+            token?token:'token_error',
+            Platform.OS == 'ios' ? 'IOS' : 'ANDROID'
+        )
     );
   };
 

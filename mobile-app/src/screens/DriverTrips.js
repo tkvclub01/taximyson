@@ -40,14 +40,12 @@ export default function DriverTrips(props) {
     }, [bookinglistdata.bookings])
 
     const onPressAccept = (item) => {
+        console.log("item__");
+        console.log(item);
         let wallet_balance = parseFloat(auth.info.profile.walletBalance);
-        if (wallet_balance >= 0) {
-            if (wallet_balance == 0){
-                Alert.alert(
-                    language.alert,
-                    language.wallet_balance_zero
-                );
-            }
+        console.log("wallet_balance");
+        console.log(wallet_balance);
+        if (wallet_balance > 0) {
             dispatch(acceptTask(auth.info, item));
             setSelectedItem(null);
             setModalVisible(null);
@@ -55,10 +53,17 @@ export default function DriverTrips(props) {
                 props.navigation.navigate('BookedCab', { bookingId: item.id });
             }, 3000)
         } else {
-            Alert.alert(
-                language.alert,
-                language.wallet_balance_negative
-            );
+            if (wallet_balance == 0){
+                Alert.alert(
+                    language.alert,
+                    language.wallet_balance_zero
+                );
+            }else{
+                Alert.alert(
+                    language.alert,
+                    language.wallet_balance_negative
+                );
+            }
         }
     };
 

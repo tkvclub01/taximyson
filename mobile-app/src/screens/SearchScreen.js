@@ -95,12 +95,12 @@ export default function SearchScreen(props) {
                 features.AllowCountrySelection?
                 {
                     key: Google_Map_Key,
-                    language: 'en',
+                    language: 'vn',
                 }
                 :
                 {
                     key: Google_Map_Key,
-                    language: 'en',
+                    language: 'vi',
                     components: 'country:' + default_country_code.code.toLowerCase()
                 }
             }

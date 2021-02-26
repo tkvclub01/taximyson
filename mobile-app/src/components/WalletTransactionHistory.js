@@ -65,14 +65,14 @@ export default function  WTransactionHistory(props) {
                             :null}
                             <View style={styles.statusView}>
                             {item.type  && item.type == 'Credit'?
-                                <Text style={styles.historyamounttextStyle}>{language.credited + ' ' + settings.symbol + parseFloat(item.amount).toFixed(2)}</Text>
+                                <Text style={styles.historyamounttextStyle}>{language.credited + ' ' +  parseFloat(item.amount).toFixed(0) + ' ' + settings.symbol}</Text>
                             :null}
                             {item.type && item.type == 'Debit'?
-                                <Text style={styles.historyamounttextStyle}>{language.debited + ' ' + settings.symbol + parseFloat(item.amount).toFixed(2)}</Text>
+                                <Text style={styles.historyamounttextStyle}>{language.debited + ' ' + parseFloat(item.amount).toFixed(0) + ' ' + settings.symbol} </Text>
                             :null}
                             {item.type && item.type == 'Withdraw'?
-                                <Text style={styles.historyamounttextStyle}>{language.withdrawn + ' ' + settings.symbol + parseFloat(item.amount).toFixed(2)}</Text>
-                            :null}   
+                                <Text style={styles.historyamounttextStyle}>{language.withdrawn + ' '  + parseFloat(item.amount).toFixed(0) + ' ' + settings.symbol}</Text>
+                            :null}
                             <Text style={styles.textStyle}>{language.Transaction_Id} {item.txRef}</Text>
                             <Text style={styles.textStyle2}>{item.date}</Text>
                             </View>
@@ -89,7 +89,7 @@ export default function  WTransactionHistory(props) {
             renderItem={newData}
         />
     );
-    
+
 };
 const styles = StyleSheet.create({
     myHeader: {

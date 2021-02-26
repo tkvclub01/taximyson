@@ -33,11 +33,11 @@
         "usesAppleSignIn": true,
         "bundleIdentifier": "com.myson.taxi",
         "infoPlist": {
-          "NSLocationAlwaysUsageDescription": "This app uses the always location access in the background for improved pickups and dropoffs, customer support and safety purpose.",
-          "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses the always location access in the background for improved pickups and dropoffs, customer support and safety purpose.",
-          "NSLocationWhenInUseUsageDescription": "This app uses the location to find the Cabs near you.",
-          "NSCameraUsageDescription": "This app uses the camera to take your profile picture.",
-          "NSPhotoLibraryUsageDescription": "This app uses Photo Library for uploading your profile picture.",
+          "NSLocationAlwaysUsageDescription": "Ứng dụng này sử dụng quyền truy cập vị trí luôn chạy trong nền để cải thiện việc đón và trả khách, hỗ trợ khách hàng và mục đích an toàn.",
+          "NSLocationAlwaysAndWhenInUseUsageDescription": "Ứng dụng này sử dụng quyền truy cập vị trí luôn chạy trong nền để cải thiện việc đưa đón và trả khách, hỗ trợ khách hàng và mục đích an toàn.",
+          "NSLocationWhenInUseUsageDescription": "Ứng dụng này sử dụng vị trí để tìm các Cabin gần bạn.",
+          "NSCameraUsageDescription": "Ứng dụng này sử dụng máy ảnh để chụp ảnh hồ sơ của bạn.",
+          "NSPhotoLibraryUsageDescription": "Ứng dụng này sử dụng Thư viện ảnh để tải lên ảnh hồ sơ của bạn.",
           "ITSAppUsesNonExemptEncryption":false,
           "UIBackgroundModes": [
             "audio",

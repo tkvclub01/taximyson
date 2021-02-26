@@ -42,7 +42,7 @@ export default function RideList(props) {
                     </View>
                     <View style={styles.textView2}>
                         <Text style={[styles.fareStyle, styles.dateStyle]}>{item.status == 'NEW' ? language[item.status] : null}</Text>
-                        <Text style={[styles.fareStyle, styles.dateStyle]}>{item.status == 'PAID' || item.status == 'COMPLETE'? item.customer_paid ? settings.symbol + parseFloat(item.customer_paid).toFixed(2) : settings.symbol + parseFloat(item.estimate).toFixed(2) : null}</Text>
+                        <Text style={[styles.fareStyle, styles.dateStyle]}>{item.status == 'PAID' || item.status == 'COMPLETE'? item.customer_paid ? parseFloat(item.customer_paid).toFixed(2) + settings.symbol : parseFloat(item.estimate).toFixed(2) + settings.symbol : null}</Text>
                         {
                             item.status == 'CANCELLED' ?
                                 <Image
@@ -77,11 +77,6 @@ const styles = StyleSheet.create({
     },
     fareStyle: {
         fontSize: 18,
-    },
-    carNoStyle: {
-        marginLeft: 45,
-        fontSize: 13,
-        marginTop: 10
     },
     picupStyle: {
         flexDirection: 'row',
@@ -135,9 +130,10 @@ const styles = StyleSheet.create({
     },
     carNoStyle: {
         fontFamily: 'Roboto-Regular',
-        fontSize: 14,
-        marginTop: 8,
-        color: colors.GREY.default
+        color: colors.GREY.default,
+        marginLeft: 45,
+        fontSize: 13,
+        marginTop: 10
     },
     placeStyle: {
         marginLeft: 10,

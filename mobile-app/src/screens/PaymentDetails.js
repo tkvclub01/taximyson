@@ -353,10 +353,10 @@ export default function PaymentDetails(props) {
           {userdata && userdata.usertype == 'rider' ?
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 25, paddingRight: 25 }}>
               <Text style={{ color: colors.BLACK, textAlign: 'left', lineHeight: 45, fontSize: 16 }}>{language.your_fare}</Text>
-              <Text style={{ color: colors.BLACK, textAlign: 'left', lineHeight: 45, fontSize: 16 }}>{settings.symbol} {parseFloat(payDetails.amount).toFixed(2)}</Text>
+              <Text style={{ color: colors.BLACK, textAlign: 'left', lineHeight: 45, fontSize: 16 }}>{parseFloat(payDetails.amount).toFixed(2)} {settings.symbol} </Text>
             </View>
             : <View style={{ flex: 1, justifyContent: 'center', padding: 25 }}>
-              <Text style={{ color: 'green', textAlign: 'center', lineHeight: 60, fontSize: 60, fontWeight: 'bold' }}>{settings.symbol} {parseFloat(payDetails.amount).toFixed(2)}</Text>
+              <Text style={{ color: 'green', textAlign: 'center', lineHeight: 60, fontSize: 60, fontWeight: 'bold' }}>{parseFloat(payDetails.amount).toFixed(2)} {settings.symbol} </Text>
             </View>
           }
           {userdata && userdata.usertype == 'rider' ?
