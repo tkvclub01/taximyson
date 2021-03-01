@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, {useState, useContext} from 'react';
 import {
     StyleSheet,
     View,
@@ -9,17 +9,18 @@ import {
     Modal,
     Dimensions
 } from 'react-native';
-import { Divider, Button, Header } from 'react-native-elements';
+import {Divider, Button, Header} from 'react-native-elements';
 import StarRating from 'react-native-star-rating';
-import { colors } from '../common/theme';
-var { width } = Dimensions.get('window');
-import { language, dateStyle } from 'config';
-import { useDispatch, useSelector } from 'react-redux';
-import { FirebaseContext } from 'common/src';
+import {colors} from '../common/theme';
+
+var {width} = Dimensions.get('window');
+import {language, dateStyle} from 'config';
+import {useDispatch, useSelector} from 'react-redux';
+import {FirebaseContext} from 'common/src';
 
 export default function DriverRating(props) {
-    const { api } = useContext(FirebaseContext);
-    const { updateBooking } = api;
+    const {api} = useContext(FirebaseContext);
+    const {updateBooking} = api;
     const dispatch = useDispatch();
     const [starCount, setStarCount] = useState(0);
     const [alertModalVisible, setAlertModalVisible] = useState(false);
@@ -63,7 +64,7 @@ export default function DriverRating(props) {
 
                             <Text style={styles.rideCancelText}>{language.no_driver_found_alert_title}</Text>
 
-                            <View style={styles.horizontalLLine} />
+                            <View style={styles.horizontalLLine}/>
 
                             <View style={styles.msgContainer}>
                                 <Text style={styles.cancelMsgText}>{language.thanks}</Text>
@@ -94,28 +95,37 @@ export default function DriverRating(props) {
         <View style={styles.mainViewStyle}>
             <Header
                 backgroundColor={colors.GREY.default}
-                leftComponent={{ icon: 'md-menu', type: 'ionicon', color: colors.WHITE, size: 30, component: TouchableWithoutFeedback, onPress: () => { props.navigation.toggleDrawer(); } }}
+                leftComponent={{
+                    icon: 'md-menu',
+                    type: 'ionicon',
+                    color: colors.WHITE,
+                    size: 20,
+                    component: TouchableWithoutFeedback,
+                    onPress: () => {
+                        props.navigation.toggleDrawer();
+                    }
+                }}
                 centerComponent={<Text style={styles.headerTitleStyle}>{language.receipt}</Text>}
-                rightComponent={<Text style={styles.headerskip} onPress={() => { skipRating() }}>{language.skip}</Text>}
+                rightComponent={<Text style={styles.headerskip} onPress={() => {
+                    skipRating()
+                }}>{language.skip}</Text>}
                 containerStyle={styles.headerStyle}
                 innerContainerStyles={styles.headerInnerStyle}
             />
             <View style={styles.dateViewStyle}>
-                <Text style={styles.dateViewTextStyle}>{booking && booking.tripdate ? new Date(booking.tripdate).toLocaleString(dateStyle) : null}</Text>
+                <Text
+                    style={styles.dateViewTextStyle}>{booking && booking.tripdate ? new Date(booking.tripdate).toLocaleString(dateStyle) : null}</Text>
             </View>
 
             <View style={styles.rateViewStyle}>
-                <Text style={styles.rateViewTextStyle}>{settings.symbol}{booking ? booking.customer_paid > 0 ? parseFloat(booking.customer_paid).toFixed(2) : 0 : null}</Text>
+                <Text
+                    style={styles.rateViewTextStyle}>{booking ? booking.customer_paid > 0 ? parseFloat(booking.customer_paid).toFixed(0) : 0 : null}{settings.symbol}</Text>
             </View>
-
             <View style={styles.addressViewStyle}>
-
                 <View style={styles.pickUpStyle}>
-
                     <View style={styles.greenDot}></View>
                     <Text style={styles.addressViewTextStyle}>{booking.pickup.add}</Text>
                 </View>
-
                 <View style={styles.pickUpStyle}>
                     <View style={styles.redDot}></View>
                     <Text style={styles.addressViewTextStyle}>{booking.drop.add}</Text>
@@ -124,18 +134,23 @@ export default function DriverRating(props) {
             </View>
 
             <View style={styles.tripMainView}>
-                <View style={{ flex: 3.2, justifyContent: 'center', alignItems: "center" }}>
+                <View style={{flex: 3.2, justifyContent: 'center', alignItems: "center"}}>
                     <View style={styles.tripSummaryStyle}>
-                        <Divider style={[styles.divider, styles.summaryStyle]} />
+                        <Divider style={[styles.divider, styles.summaryStyle]}/>
                         <Text style={styles.summaryText}>{language.rate_ride} </Text>
-                        <Divider style={[styles.divider, styles.dividerStyle]} />
+                        <Divider style={[styles.divider, styles.dividerStyle]}/>
                     </View>
-                    <View style={{ flex: 3, justifyContent: 'center', alignItems: "center" }}>
+                    <View style={{flex: 3, justifyContent: 'center', alignItems: "center"}}>
                         {booking ?
 
-                            booking.driver_image != '' ? <Image source={{ uri: booking.driver_image }} style={{ height: 78, width: 78, borderRadius: 78 / 2 }} /> :
+                            booking.driver_image != '' ? <Image source={{uri: booking.driver_image}} style={{
+                                    height: 78,
+                                    width: 78,
+                                    borderRadius: 78 / 2
+                                }}/> :
 
-                                <Image source={require('../../assets/images/profilePic.png')} style={{ height: 78, width: 78, borderRadius: 78 / 2 }} />
+                                <Image source={require('../../assets/images/profilePic.png')}
+                                       style={{height: 78, width: 78, borderRadius: 78 / 2}}/>
 
                             : null}
                     </View>
@@ -158,7 +173,7 @@ export default function DriverRating(props) {
                         halfStarColor={colors.YELLOW.primary}
                         rating={starCount}
                         selectedStar={(rating) => onStarRatingPress(rating)}
-                        buttonStyle={{ padding: 20 }}
+                        buttonStyle={{padding: 20}}
                         containerStyle={styles.contStyle}
                     />
                 </View>
@@ -167,7 +182,7 @@ export default function DriverRating(props) {
             <View style={styles.confBtnStyle}>
                 <Button
                     title={language.submit_rating}
-                    titleStyle={{ fontFamily: 'Roboto-Bold', }}
+                    titleStyle={{fontFamily: 'Roboto-Bold',}}
                     onPress={() => submitNow()}
                     buttonStyle={styles.myButtonStyle}
                     disabled={starCount > 0 ? false : true}
@@ -193,7 +208,7 @@ const styles = StyleSheet.create({
     headerTitleStyle: {
         color: colors.WHITE,
         fontFamily: 'Roboto-Bold',
-        fontSize: 20
+        fontSize: 15
     },
     headerskip: {
         color: colors.WHITE,
@@ -208,15 +223,15 @@ const styles = StyleSheet.create({
     dateViewTextStyle: {
         fontFamily: 'Roboto-Regular',
         color: colors.GREY.btnPrimary,
-        fontSize: 26,
+        fontSize: 16,
         textAlign: "center"
     },
     rateViewStyle: {
         alignItems: 'center',
-        flex: 2
+        flex: 1
     },
     rateViewTextStyle: {
-        fontSize: 60,
+        fontSize: 30,
         color: colors.BLACK,
         fontFamily: 'Roboto-Bold',
         fontWeight: 'bold',
@@ -224,7 +239,7 @@ const styles = StyleSheet.create({
     },
     addressViewStyle: {
         flex: 3,
-        paddingTop: 22,
+        paddingTop: 5,
         paddingLeft: 10,
         paddingRight: 10
     },
@@ -279,6 +294,7 @@ const styles = StyleSheet.create({
     },
     tripMainView: {
         flex: 6,
+        marginTop: 10,
         flexDirection: "column",
         justifyContent: "center",
     },
@@ -316,14 +332,45 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start"
     },
     //alert modal
-    alertModalContainer: { flex: 1, justifyContent: 'center', backgroundColor: colors.GREY.background },
-    alertModalInnerContainer: { height: 200, width: (width * 0.85), backgroundColor: colors.WHITE, alignItems: 'center', alignSelf: 'center', borderRadius: 7 },
-    alertContainer: { flex: 2, justifyContent: 'space-between', width: (width - 100) },
-    rideCancelText: { flex: 1, top: 15, color: colors.BLACK, fontFamily: 'Roboto-Bold', fontSize: 20, alignSelf: 'center' },
-    horizontalLLine: { width: (width - 110), height: 0.5, backgroundColor: colors.BLACK, alignSelf: 'center', },
-    msgContainer: { flex: 2.5, alignItems: 'center', justifyContent: 'center' },
-    cancelMsgText: { color: colors.BLACK, fontFamily: 'Roboto-Regular', fontSize: 15, alignSelf: 'center', textAlign: 'center' },
-    okButtonContainer: { flex: 1, width: (width * 0.85), flexDirection: 'row', backgroundColor: colors.GREY.iconSecondary, alignSelf: 'center' },
-    okButtonStyle: { flexDirection: 'row', backgroundColor: colors.GREY.iconSecondary, alignItems: 'center', justifyContent: 'center' },
-    okButtonContainerStyle: { flex: 1, width: (width * 0.85), backgroundColor: colors.GREY.iconSecondary, },
+    alertModalContainer: {flex: 1, justifyContent: 'center', backgroundColor: colors.GREY.background},
+    alertModalInnerContainer: {
+        height: 200,
+        width: (width * 0.85),
+        backgroundColor: colors.WHITE,
+        alignItems: 'center',
+        alignSelf: 'center',
+        borderRadius: 7
+    },
+    alertContainer: {flex: 2, justifyContent: 'space-between', width: (width - 100)},
+    rideCancelText: {
+        flex: 1,
+        top: 15,
+        color: colors.BLACK,
+        fontFamily: 'Roboto-Bold',
+        fontSize: 20,
+        alignSelf: 'center'
+    },
+    horizontalLLine: {width: (width - 110), height: 0.5, backgroundColor: colors.BLACK, alignSelf: 'center',},
+    msgContainer: {flex: 2.5, alignItems: 'center', justifyContent: 'center'},
+    cancelMsgText: {
+        color: colors.BLACK,
+        fontFamily: 'Roboto-Regular',
+        fontSize: 15,
+        alignSelf: 'center',
+        textAlign: 'center'
+    },
+    okButtonContainer: {
+        flex: 1,
+        width: (width * 0.85),
+        flexDirection: 'row',
+        backgroundColor: colors.GREY.iconSecondary,
+        alignSelf: 'center'
+    },
+    okButtonStyle: {
+        flexDirection: 'row',
+        backgroundColor: colors.GREY.iconSecondary,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    okButtonContainerStyle: {flex: 1, width: (width * 0.85), backgroundColor: colors.GREY.iconSecondary,},
 });

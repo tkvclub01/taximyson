@@ -15,12 +15,11 @@ export default function RegistrationPage(props) {
   const [loading, setLoading] = useState(false);
   const cars = useSelector(state => state.cartypes.cars);
   const [carTypes, setCarTypes] = useState(null);
-
   useEffect(() => {
     if (cars) {
       let arr = [];
       for (let i = 0; i < cars.length; i++) {
-        arr.push({ label: cars[i].name, value: cars[i].name });
+        arr.push({ label: language.ban_chay + ' ' + cars[i].name, value: cars[i].name });
       }
       setCarTypes(arr);
     }

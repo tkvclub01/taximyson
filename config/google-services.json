@@ -30,6 +30,13 @@
             {
               "client_id": "314152728806-s0oa7d09sbu0csljl2kbcjvagclqqqul.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "314152728806-kt5410q75ue7d3fnhnefrk1hqc9inko5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.myson.taxi"
+              }
             }
           ]
         }

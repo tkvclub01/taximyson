@@ -192,14 +192,32 @@ export const emailSignUp = (regData) => async (firebase) => {
   let url = `${cloud_function_server_url}/user_signup`;
 
   const {
-    driverDocsRef
+    licenseImageRef,
+    cmndRef,
+    cmndSRef,
+    licenseSImageRef,
+    anhBienSoXeRef
   } = firebase;
   let createDate = new Date();
   regData.createdAt = createDate.toISOString();
   if (regData.usertype == 'driver') {
     let timestamp = createDate.getTime();
-    await driverDocsRef(timestamp).put(regData.licenseImage);
-    regData.licenseImage = await driverDocsRef(timestamp).getDownloadURL();
+
+    await licenseImageRef(timestamp).put(regData.licenseImage);
+    regData.licenseImage = await licenseImageRef(timestamp).getDownloadURL();
+
+    await licenseSImageRef(timestamp).put(regData.licenseSImage);
+    regData.licenseSImage = await licenseSImageRef(timestamp).getDownloadURL();
+
+    await cmndRef(timestamp).put(regData.cmnd);
+    regData.cmnd = await cmndRef(timestamp).getDownloadURL();
+
+    await cmndSRef(timestamp).put(regData.cmndS);
+    regData.cmndS = await cmndSRef(timestamp).getDownloadURL();
+
+    await anhBienSoXeRef(timestamp).put(regData.anhBienSoXe);
+    regData.anhBienSoXe = await anhBienSoXeRef(timestamp).getDownloadURL();
+
   }
   const response = await fetch(url, {
     method: 'POST',

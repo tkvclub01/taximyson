@@ -1,23 +1,24 @@
-import React, { useState } from 'react';
-import { 
-    View, 
+import React, {useState} from 'react';
+import {
+    View,
     Text,
-    Dimensions, 
-    TouchableOpacity, 
-    ScrollView, 
+    Dimensions,
+    TouchableOpacity,
+    ScrollView,
     KeyboardAvoidingView,
-    Image, 
+    Image,
     TouchableWithoutFeedback,
-    Platform, 
-    Alert 
+    Platform,
+    Alert
 } from 'react-native';
 import Background from './Background';
-import { Icon, Button, Header, Input } from 'react-native-elements'
-import { colors } from '../common/theme';
-var { height } = Dimensions.get('window');
-import { 
+import {Icon, Button, Header, Input} from 'react-native-elements'
+import {colors} from '../common/theme';
+
+var {height} = Dimensions.get('window');
+import {
     language,
-    countries, 
+    countries,
     default_country_code,
     features
 } from 'config';
@@ -35,90 +36,256 @@ export default function Registration(props) {
         mobile: '',
         referralId: '',
         vehicleNumber: '',
-        vehicleMake:'',
+        vehicleMake: '',
         vehicleModel: '',
-        carType: props.cars && props.cars.length > 0? props.cars[0].value: '',
+        carType: props.cars && props.cars.length > 0 ? props.cars[0].value : '',
         bankAccount: '',
         bankCode: '',
         bankName: '',
-        licenseImage:null,
-        other_info:'',
-        password:''  
+        licenseImage: null,
+        licenseSImage: null,
+        cmnd: null,
+        cmndS: null,
+        anhBienSoXe: null,
+        password: ''
     });
     const [role, setRole] = useState(0);
-    const [capturedImage, setCapturedImage] = useState(null);
-    const [confirmpassword,setConfirmPassword] = useState('');
-    const [countryCode,setCountryCode] = useState("+" + default_country_code.phone);
+    const [capturedImageDrivingLicense, setCapturedImageDrivingLicense] = useState(null);
+    const [capturedImageDrivingLicenseS, setCapturedImageDrivingLicenseS] = useState(null);
+    const [capturedImageCmnd, setCapturedImageCmnd] = useState(null);
+    const [capturedImageCmndS, setCapturedImageCmndS] = useState(null);
+    const [capturedImageBienSoXe, setCapturedImageBienSoXe] = useState(null);
+    const [confirmpassword, setConfirmPassword] = useState('');
+    const [countryCode, setCountryCode] = useState("+" + default_country_code.phone);
     const [mobileWithoutCountry, setMobileWithoutCountry] = useState('');
 
     const radio_props = [
-        { label: language.no, value: 0 },
-        { label: language.yes, value: 1 }
+        {label: language.rider, value: 0},
+        {label: language.driver, value: 1}
     ];
 
     const formatCountries = () => {
         let arr = [];
         for (let i = 0; i < countries.length; i++) {
-            arr.push({ label: countries[i].label + " (+" + countries[i].phone + ")", value: "+" + countries[i].phone, key: countries[i].code });
+            arr.push({
+                label: countries[i].label + " (+" + countries[i].phone + ")",
+                value: "+" + countries[i].phone,
+                key: countries[i].code
+            });
         }
         return arr;
     }
 
-    CapturePhoto = async () => {
-        const { status: cameraStatus } = await Permissions.askAsync(Permissions.CAMERA)
-        const { status: cameraRollStatus } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    CapturePhotoDrivingLicense = async () => {
+        const {status: cameraStatus} = await Permissions.askAsync(Permissions.CAMERA)
+        const {status: cameraRollStatus} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
         if (cameraStatus === 'granted' && cameraRollStatus === 'granted') {
             let result = await ImagePicker.launchImageLibraryAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
                 quality: 1.0,
-                base64:true
+                base64: true
             });
 
             if (!result.cancelled) {
                 let data = 'data:image/jpeg;base64,' + result.base64;
-                setCapturedImage(result.uri);
+                setCapturedImageDrivingLicense(result.uri);
                 const blob = await new Promise((resolve, reject) => {
                     const xhr = new XMLHttpRequest();
-                    xhr.onload = function() {
-                        resolve(xhr.response); 
+                    xhr.onload = function () {
+                        resolve(xhr.response);
                     };
-                    xhr.onerror = function() {
+                    xhr.onerror = function () {
                         Alert.alert(language.alert, language.image_upload_error);
                         setLoader(false);
                     };
-                    xhr.responseType = 'blob'; 
-                    xhr.open('GET', Platform.OS=='ios'?data:result.uri, true); 
-                    xhr.send(null); 
+                    xhr.responseType = 'blob';
+                    xhr.open('GET', Platform.OS == 'ios' ? data : result.uri, true);
+                    xhr.send(null);
                 });
-                if(blob){
-                    setState({ ...state, licenseImage: blob });
+                if (blob) {
+                    setState({...state, licenseImage: blob});
                 }
             }
         } else {
-            Alert.alert(language.alert,language.camera_permission_error)
+            Alert.alert(language.alert, language.camera_permission_error)
+        }
+    }
+    CapturePhotoDrivingLicenseS = async () => {
+        const {status: cameraStatus} = await Permissions.askAsync(Permissions.CAMERA)
+        const {status: cameraRollStatus} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+        if (cameraStatus === 'granted' && cameraRollStatus === 'granted') {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1.0,
+                base64: true
+            });
+
+            if (!result.cancelled) {
+                let data = 'data:image/jpeg;base64,' + result.base64;
+                setCapturedImageDrivingLicenseS(result.uri);
+                const blob = await new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    xhr.onload = function () {
+                        resolve(xhr.response);
+                    };
+                    xhr.onerror = function () {
+                        Alert.alert(language.alert, language.image_upload_error);
+                        setLoader(false);
+                    };
+                    xhr.responseType = 'blob';
+                    xhr.open('GET', Platform.OS == 'ios' ? data : result.uri, true);
+                    xhr.send(null);
+                });
+                if (blob) {
+                    setState({...state, licenseSImage: blob});
+                }
+            }
+        } else {
+            Alert.alert(language.alert, language.camera_permission_error)
+        }
+    }
+    CapturePhotoCmnd = async () => {
+        const {status: cameraStatus} = await Permissions.askAsync(Permissions.CAMERA)
+        const {status: cameraRollStatus} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+        if (cameraStatus === 'granted' && cameraRollStatus === 'granted') {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1.0,
+                base64: true
+            });
+
+            if (!result.cancelled) {
+                let data = 'data:image/jpeg;base64,' + result.base64;
+                setCapturedImageCmnd(result.uri);
+                const blob = await new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    xhr.onload = function () {
+                        resolve(xhr.response);
+                    };
+                    xhr.onerror = function () {
+                        Alert.alert(language.alert, language.image_upload_error);
+                        setLoader(false);
+                    };
+                    xhr.responseType = 'blob';
+                    xhr.open('GET', Platform.OS == 'ios' ? data : result.uri, true);
+                    xhr.send(null);
+                });
+                if (blob) {
+                    setState({...state, cmnd: blob});
+                }
+            }
+        } else {
+            Alert.alert(language.alert, language.camera_permission_error)
+        }
+    }
+    CapturePhotoCmndS = async () => {
+        const {status: cameraStatus} = await Permissions.askAsync(Permissions.CAMERA)
+        const {status: cameraRollStatus} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+        if (cameraStatus === 'granted' && cameraRollStatus === 'granted') {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1.0,
+                base64: true
+            });
+
+            if (!result.cancelled) {
+                let data = 'data:image/jpeg;base64,' + result.base64;
+                setCapturedImageCmndS(result.uri);
+                const blob = await new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    xhr.onload = function () {
+                        resolve(xhr.response);
+                    };
+                    xhr.onerror = function () {
+                        Alert.alert(language.alert, language.image_upload_error);
+                        setLoader(false);
+                    };
+                    xhr.responseType = 'blob';
+                    xhr.open('GET', Platform.OS == 'ios' ? data : result.uri, true);
+                    xhr.send(null);
+                });
+                if (blob) {
+                    setState({...state, cmndS: blob});
+                }
+            }
+        } else {
+            Alert.alert(language.alert, language.camera_permission_error)
+        }
+    }
+    CapturePhotoBienSoXe = async () => {
+        const {status: cameraStatus} = await Permissions.askAsync(Permissions.CAMERA)
+        const {status: cameraRollStatus} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+        if (cameraStatus === 'granted' && cameraRollStatus === 'granted') {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1.0,
+                base64: true
+            });
+
+            if (!result.cancelled) {
+                let data = 'data:image/jpeg;base64,' + result.base64;
+                setCapturedImageBienSoXe(result.uri);
+                const blob = await new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    xhr.onload = function () {
+                        resolve(xhr.response);
+                    };
+                    xhr.onerror = function () {
+                        Alert.alert(language.alert, language.image_upload_error);
+                        setLoader(false);
+                    };
+                    xhr.responseType = 'blob';
+                    xhr.open('GET', Platform.OS == 'ios' ? data : result.uri, true);
+                    xhr.send(null);
+                });
+                if (blob) {
+                    setState({...state, anhBienSoXe: blob});
+                }
+            }
+        } else {
+            Alert.alert(language.alert, language.camera_permission_error)
         }
     }
 
-    //upload cancel
-    cancelPhoto = () => {
-        setCapturedImage(null);
+//upload cancel
+    cancelPhotoDrivingLicense = () => {
+        setCapturedImageDrivingLicense(null);
     }
-
+    cancelPhotoDrivingLicenseS = () => {
+        setCapturedImageDrivingLicenseS(null);
+    }
+    cancelPhotoCmnd = () => {
+        setCapturedImageCmnd(null);
+    }
+    cancelPhotoCmndS = () => {
+        setCapturedImageCmndS(null);
+    }
+    cancelPhotoBienSoXe = () => {
+        setCapturedImageBienSoXe(null);
+    }
     const setUserType = (value) => {
-        if(value==0){
-            setState({...state, usertype: 'rider' });
-        }else{
-            setState({...state, usertype: 'driver' });
+        if (value == 0) {
+            setState({...state, usertype: 'rider'});
+        } else {
+            setState({...state, usertype: 'driver'});
         }
     }
 
     validateMobile = () => {
         let mobileValid = true;
-        if(mobileWithoutCountry.length<6){
+        if (mobileWithoutCountry.length < 6) {
             mobileValid = false;
-            Alert.alert(language.alert,language.mobile_no_blank_error);
+            Alert.alert(language.alert, language.mobile_no_blank_error);
         }
         return mobileValid;
     }
@@ -130,58 +297,70 @@ export default function Registration(props) {
         if (complexity == 'any') {
             passwordValid = state.password.length >= 1;
             if (!passwordValid) {
-                Alert.alert(language.alert,language.password_blank_messege);
+                Alert.alert(language.alert, language.password_blank_messege);
             }
-        }
-        else if (complexity == 'alphanumeric') {
+        } else if (complexity == 'alphanumeric') {
             passwordValid = regx1.test(state.password);
             if (!passwordValid) {
-                Alert.alert(language.alert,language.password_alphaNumeric_check);
+                Alert.alert(language.alert, language.password_alphaNumeric_check);
             }
-        }
-        else if (complexity == 'complex') {
+        } else if (complexity == 'complex') {
             passwordValid = regx2.test(password);
             if (!passwordValid) {
-                Alert.alert(language.alert,language.password_complexity_check);
+                Alert.alert(language.alert, language.password_complexity_check);
             }
-        }
-        else if (state.password != confirmpassword){
+        } else if (state.password != confirmpassword) {
             passwordValid = false;
             if (!passwordValid) {
-                Alert.alert(language.alert,language.confrim_password_not_match_err);
+                Alert.alert(language.alert, language.confrim_password_not_match_err);
             }
         }
         return passwordValid
     }
 
 
-    //register button press for validation
+//register button press for validation
     onPressRegister = () => {
-        const { onPressRegister } = props;
+        const {onPressRegister} = props;
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        if(re.test(state.email)){
-            if(state.usertype == 'driver' && state.licenseImage == null){
-                Alert.alert(language.alert,language.proper_input_licenseimage);
-            }else{
-                if((state.usertype == 'driver' && state.vehicleNumber.length > 1) || state.usertype == 'rider'){
-                    if(state.firstName.length>0 && state.lastName.length >0){
-                        if(validatePassword('alphanumeric')){
-                            if(validateMobile()){
-                                onPressRegister(state);
-                            }else{
-                                Alert.alert(language.alert,language.mobile_no_blank_error);
-                            }
-                        }
-                    }else{
-                        Alert.alert(language.alert,language.proper_input_name);
-                    }
-                }else{
-                    Alert.alert(language.alert,language.proper_input_vehicleno);
-                }
+        //if(re.test(state.email)){
+        let isValidDriver = false;
+        let validUser = false;
+        if (state.firstName.length < 1 || state.lastName.length < 1) {
+            Alert.alert(language.alert, language.mobile_no_blank_error);
+        } else if (validatePassword('alphanumeric')) {
+            if (validateMobile()) {
+                validUser = true;
+            } else {
+                Alert.alert(language.alert, language.mobile_no_blank_error);
             }
-        }else{
-            Alert.alert(language.alert,language.proper_email);
         }
+        if (state.usertype == 'driver' && validUser) {
+            if (state.licenseSImage == null) {
+                Alert.alert(language.alert, language.proper_input_licenseimage_s);
+            } else if (state.cmnd == null) {
+                Alert.alert(language.alert, language.proper_input_cmnd);
+            } else if (state.cmndS == null) {
+                Alert.alert(language.alert, language.proper_input_cmnd_s);
+            } else if (state.anhBienSoXe == null) {
+                Alert.alert(language.alert, language.proper_input_anh_bien_so);
+            } else if (state.licenseImage == null) {
+                Alert.alert(language.alert, language.proper_input_licenseimage);
+            } else if (state.vehicleNumber.length < 1) {
+                Alert.alert(language.alert, language.proper_input_vehicleno);
+            } else {
+                isValidDriver = true;
+            }
+        }
+
+
+        if (isValidDriver || (state.usertype == 'rider' && validUser)) {
+            onPressRegister(state);
+        }
+
+        /*}else{
+            Alert.alert(language.alert,language.proper_email);
+        }*/
     }
 
 
@@ -189,13 +368,20 @@ export default function Registration(props) {
         <Background>
             <Header
                 backgroundColor={colors.TRANSPARENT}
-                leftComponent={{ icon: 'ios-arrow-back', type: 'ionicon', color: colors.WHITE, size: 35, component: TouchableWithoutFeedback, onPress: props.onPressBack }}
+                leftComponent={{
+                    icon: 'ios-arrow-back',
+                    type: 'ionicon',
+                    color: colors.WHITE,
+                    size: 35,
+                    component: TouchableWithoutFeedback,
+                    onPress: props.onPressBack
+                }}
                 containerStyle={styles.headerContainerStyle}
                 innerContainerStyles={styles.headerInnerContainer}
             />
             <ScrollView style={styles.scrollViewStyle} showsVerticalScrollIndicator={false}>
                 <View style={styles.logo}>
-                    <Image source={require('../../assets/images/logo165x90white.png')} />
+                    <Image source={require('../../assets/images/logo165x90white.png')}/>
                 </View>
                 <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "padding" : "padding"} style={styles.form}>
                     <View style={styles.containerStyle}>
@@ -206,113 +392,40 @@ export default function Registration(props) {
                                 type='font-awesome'
                                 color={colors.WHITE}
                                 size={24}
-                                containerStyle={styles.iconContainer}
+                                containerStyle={[styles.iconContainer, {paddingTop: 15}]}
                             />
-                            <Input
-                                editable={true}
-                                underlineColorAndroid={colors.TRANSPARENT}
-                                placeholder={language.first_name_placeholder}
-                                placeholderTextColor={colors.WHITE}
-                                value={state.firstName}
-                                keyboardType={'email-address'}
-                                inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => { setState({ ...state, firstName: text }) }}
-                                inputContainerStyle={styles.inputContainerStyle}
-                                containerStyle={styles.textInputStyle}
-                            />
-                        </View>
-
-                        <View style={styles.textInputContainerStyle}>
-                            <Icon
-                                name='user'
-                                type='font-awesome'
-                                color={colors.WHITE}
-                                size={24}
-                                containerStyle={styles.iconContainer}
-                            />
-                            <Input
-                                editable={true}
-                                underlineColorAndroid={colors.TRANSPARENT}
-                                placeholder={language.last_name_placeholder}
-                                placeholderTextColor={colors.WHITE}
-                                value={state.lastName}
-                                keyboardType={'email-address'}
-                                inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => { setState({ ...state, lastName: text }) }}
-                                inputContainerStyle={styles.inputContainerStyle}
-                                containerStyle={styles.textInputStyle}
+                            <Text style={{
+                                marginLeft: 20,
+                                marginTop: 0,
+                                color: colors.WHITE
+                            }}>{language.register_as_driver}</Text>
+                            <RadioForm
+                                radio_props={radio_props}
+                                initial={role}
+                                formHorizontal={true}
+                                labelHorizontal={true}
+                                buttonColor={colors.WHITE}
+                                labelColor={colors.WHITE}
+                                style={{marginLeft: 10}}
+                                labelStyle={{marginRight: 20}}
+                                selectedButtonColor={colors.WHITE}
+                                selectedLabelColor={colors.WHITE}
+                                onPress={(value) => {
+                                    setRole(value);
+                                    setUserType(value);
+                                }}
                             />
                         </View>
-                        <View style={styles.textInputContainerStyle}>
-                            <Icon
-                                name='envelope-o'
-                                type='font-awesome'
-                                color={colors.WHITE}
-                                size={18}
-                                containerStyle={styles.iconContainer}
-                            />
-                            <Input
-                                underlineColorAndroid={colors.TRANSPARENT}
-                                placeholder={language.email_placeholder}
-                                placeholderTextColor={colors.WHITE}
-                                value={state.email}
-                                keyboardType={'email-address'}
-                                inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => { setState({ ...state, email: text }) }}
-                                inputContainerStyle={styles.inputContainerStyle}
-                                containerStyle={styles.textInputStyle}
-                            />
-                        </View>
-                        <View style={styles.textInputContainerStyle}>
-                            <Icon
-                                name='lock'
-                                type='font-awesome'
-                                color={colors.WHITE}
-                                size={24}
-                                containerStyle={styles.iconContainer}
-                            />
-                            <Input
-                                underlineColorAndroid={colors.TRANSPARENT}
-                                placeholder={language.password_placeholder}
-                                placeholderTextColor={colors.WHITE}
-                                value={state.password}
-                                inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => setState({ ...state, password: text })}
-                                inputContainerStyle={styles.inputContainerStyle}
-                                containerStyle={styles.textInputStyle}
-                                secureTextEntry={true}
-                            />
-                        </View>
-                        <View style={styles.textInputContainerStyle}>
-                            <Icon
-                                name='lock'
-                                type='font-awesome'
-                                color={colors.WHITE}
-                                size={24}
-                                containerStyle={styles.iconContainer}
-                            />
-                            <Input
-                                underlineColorAndroid={colors.TRANSPARENT}
-                                placeholder={language.confrim_password_placeholder}
-                                placeholderTextColor={colors.WHITE}
-                                value={confirmpassword}
-                                inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => setConfirmPassword(text)}
-                                inputContainerStyle={styles.inputContainerStyle}
-                                containerStyle={styles.textInputStyle}
-                                secureTextEntry={true}
-                            />
-                        </View>
-                        <View style={[styles.textInputContainerStyle,{marginBottom:10}]}>
+                        <View style={[styles.textInputContainerStyle, {marginBottom: 10, opacity: 0, height: 0}]}>
                             <Icon
                                 name='mobile-phone'
                                 type='font-awesome'
                                 color={colors.WHITE}
                                 size={36}
-                                containerStyle={[styles.iconContainer,{marginTop:10}]}
+                                containerStyle={[styles.iconContainer, {marginTop: 10}]}
                             />
                             <RNPickerSelect
-                                placeholder={{ label: language.select_country, value: language.select_country }}
+                                placeholder={{label: language.select_country, value: language.select_country}}
                                 value={countryCode}
                                 useNativeAndroidPickerStyle={true}
                                 style={{
@@ -321,10 +434,10 @@ export default function Registration(props) {
                                 }}
                                 onValueChange={
                                     (text) => {
-                                        setCountryCode(text);                                     
+                                        setCountryCode(text);
                                         let formattedNum = mobileWithoutCountry.replace(/ /g, '');
                                         formattedNum = text + formattedNum.replace(/-/g, '');
-                                        setState({ ...state, mobile: formattedNum })
+                                        setState({...state, mobile: formattedNum})
                                     }
                                 }
                                 items={formatCountries()}
@@ -351,11 +464,120 @@ export default function Registration(props) {
                                         setMobileWithoutCountry(text)
                                         let formattedNum = text.replace(/ /g, '');
                                         formattedNum = countryCode + formattedNum.replace(/-/g, '');
-                                        setState({ ...state, mobile: formattedNum })
+                                        setState({...state, mobile: formattedNum})
                                     }
-                                }     
+                                }
                                 inputContainerStyle={styles.inputContainerStyle}
                                 containerStyle={styles.textInputStyle}
+                            />
+                        </View>
+                        <View style={styles.textInputContainerStyle}>
+                            <Icon
+                                name='user'
+                                type='font-awesome'
+                                color={colors.WHITE}
+                                size={24}
+                                containerStyle={styles.iconContainer}
+                            />
+                            <Input
+                                editable={true}
+                                underlineColorAndroid={colors.TRANSPARENT}
+                                placeholder={language.first_name_placeholder}
+                                placeholderTextColor={colors.WHITE}
+                                value={state.firstName}
+                                keyboardType={'email-address'}
+                                inputStyle={styles.inputTextStyle}
+                                onChangeText={(text) => {
+                                    setState({...state, firstName: text})
+                                }}
+                                inputContainerStyle={styles.inputContainerStyle}
+                                containerStyle={styles.textInputStyle}
+                            />
+                        </View>
+
+                        <View style={styles.textInputContainerStyle}>
+                            <Icon
+                                name='user'
+                                type='font-awesome'
+                                color={colors.WHITE}
+                                size={24}
+                                containerStyle={styles.iconContainer}
+                            />
+                            <Input
+                                editable={true}
+                                underlineColorAndroid={colors.TRANSPARENT}
+                                placeholder={language.last_name_placeholder}
+                                placeholderTextColor={colors.WHITE}
+                                value={state.lastName}
+                                keyboardType={'email-address'}
+                                inputStyle={styles.inputTextStyle}
+                                onChangeText={(text) => {
+                                    setState({...state, lastName: text})
+                                }}
+                                inputContainerStyle={styles.inputContainerStyle}
+                                containerStyle={styles.textInputStyle}
+                            />
+                        </View>
+                        <View style={styles.textInputContainerStyle}>
+                            <Icon
+                                name='envelope-o'
+                                type='font-awesome'
+                                color={colors.WHITE}
+                                size={18}
+                                containerStyle={styles.iconContainer}
+                            />
+                            <Input
+                                underlineColorAndroid={colors.TRANSPARENT}
+                                placeholder={language.email_placeholder}
+                                placeholderTextColor={colors.WHITE}
+                                value={state.email}
+                                keyboardType={'email-address'}
+                                inputStyle={styles.inputTextStyle}
+                                onChangeText={(text) => {
+                                    setState({...state, email: text})
+                                }}
+                                inputContainerStyle={styles.inputContainerStyle}
+                                containerStyle={styles.textInputStyle}
+                            />
+                        </View>
+                        <View style={styles.textInputContainerStyle}>
+                            <Icon
+                                name='lock'
+                                type='font-awesome'
+                                color={colors.WHITE}
+                                size={24}
+                                containerStyle={styles.iconContainer}
+                            />
+                            <Input
+                                underlineColorAndroid={colors.TRANSPARENT}
+                                placeholder={language.password_placeholder}
+                                placeholderTextColor={colors.WHITE}
+                                value={state.password}
+                                inputStyle={styles.inputTextStyle}
+                                onChangeText={(text) => setState({...state, password: text})}
+                                inputContainerStyle={styles.inputContainerStyle}
+                                containerStyle={styles.textInputStyle}
+                                secureTextEntry={true}
+                            />
+                        </View>
+                        <View style={styles.textInputContainerStyle}>
+                            <Icon
+                                name='lock'
+                                type='font-awesome'
+                                color={colors.WHITE}
+                                size={24}
+                                containerStyle={styles.iconContainer}
+                            />
+                            <Input
+                                underlineColorAndroid={colors.TRANSPARENT}
+                                placeholder={language.confrim_password_placeholder}
+                                placeholderTextColor={colors.WHITE}
+                                value={confirmpassword}
+                                inputStyle={styles.inputTextStyle}
+                                onChangeText={(text) => setConfirmPassword(text)}
+                                inputContainerStyle={styles.inputContainerStyle}
+                                containerStyle={styles.textInputStyle}
+                                secureTextEntry={true}
                             />
                         </View>
                         <View style={styles.textInputContainerStyle}>
@@ -374,154 +596,113 @@ export default function Registration(props) {
                                 placeholderTextColor={colors.WHITE}
                                 value={state.referralId}
                                 inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => { setState({ ...state, referralId: text }) }}
-                                inputContainerStyle={styles.inputContainerStyle}
-                                containerStyle={styles.textInputStyle}
-                            />
-                        </View>
-                        <View style={styles.textInputContainerStyle}>
-                            <Icon
-                                name='user'
-                                type='font-awesome'
-                                color={colors.WHITE}
-                                size={24}
-                                containerStyle={[styles.iconContainer,{paddingTop:15}]}
-                            />
-                            <Text style={{marginLeft:20,marginTop:0,color:colors.WHITE}}>{language.register_as_driver}</Text>
-                            <RadioForm
-                                radio_props={radio_props}
-                                initial={role}
-                                formHorizontal={true}
-                                labelHorizontal={true}
-                                buttonColor={colors.WHITE}
-                                labelColor={colors.WHITE}
-                                style={{marginLeft:10}}
-                                labelStyle ={{marginRight: 20}}
-                                selectedButtonColor={colors.WHITE}
-                                selectedLabelColor={colors.WHITE}
-                                onPress={(value) => {
-                                    setRole(value);
-                                    setUserType(value);
+                                onChangeText={(text) => {
+                                    setState({...state, referralId: text})
                                 }}
+                                inputContainerStyle={styles.inputContainerStyle}
+                                containerStyle={styles.textInputStyle}
                             />
                         </View>
-                        {state.usertype == 'driver' ? 
-                        <View style={[styles.textInputContainerStyle,{marginTop:10,marginBottom:10}]}>
-                            <Icon
-                                name='car'
-                                type='font-awesome'
-                                color={colors.WHITE}
-                                size={18}
-                                containerStyle={[styles.iconContainer,{paddingTop:20}]}
-                            />
-                            {props.cars?
-                                <RNPickerSelect
-                                    placeholder={{}}
-                                    value={state.carType}
-                                    useNativeAndroidPickerStyle={true}
-                                    style={{
-                                        inputIOS: styles.pickerStyle,
-                                        placeholder: {
-                                            color: 'white'
-                                        },
-                                        inputAndroid: styles.pickerStyle
-                                    }}
-                                    onValueChange={(value) => setState({ ...state, carType: value })}
-                                    items={props.cars}
+                        {state.usertype == 'driver' ?
+                            <View style={[styles.textInputContainerStyle, {marginTop: 10, marginBottom: 10}]}>
+                                <Icon
+                                    name='car'
+                                    type='font-awesome'
+                                    color={colors.WHITE}
+                                    size={18}
+                                    containerStyle={[styles.iconContainer, {paddingTop: 20}]}
                                 />
-                                : null}
-                        </View>
-                        :null}
-                        {state.usertype == 'driver' ? 
-                        <View style={styles.textInputContainerStyle}>
-                            <Icon
-                                name='car'
-                                type='font-awesome'
-                                color={colors.WHITE}
-                                size={18}
-                                containerStyle={styles.iconContainer}
-                            />
-                            <Input
-                                editable={true}
-                                returnKeyType={'next'}
-                                underlineColorAndroid={colors.TRANSPARENT}
-                                placeholder={language.vehicle_model_name}
-                                placeholderTextColor={colors.WHITE}
-                                value={state.vehicleMake}
-                                inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => { setState({ ...state, vehicleMake: text }) }}
-                                inputContainerStyle={styles.inputContainerStyle}
-                                containerStyle={styles.textInputStyle}
-                            />
-                        </View>
-                        :null}
-                        {state.usertype == 'driver' ? 
-                        <View style={styles.textInputContainerStyle}>
-                            <Icon
-                                name='car'
-                                type='font-awesome'
-                                color={colors.WHITE}
-                                size={18}
-                                containerStyle={styles.iconContainer}
-                            />
-                            <Input
-                                editable={true}
-                                underlineColorAndroid={colors.TRANSPARENT}
-                                placeholder={language.vehicle_model_no}
-                                placeholderTextColor={colors.WHITE}
-                                value={state.vehicleModel}
-                                inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => { setState({ ...state, vehicleModel: text }) }}
-                                inputContainerStyle={styles.inputContainerStyle}
-                                containerStyle={styles.textInputStyle}
-                            />
-                        </View>
-                        :null}
-                        {state.usertype == 'driver' ? 
-                        <View style={styles.textInputContainerStyle}>
-                            <Icon
-                                name='car'
-                                type='font-awesome'
-                                color={colors.WHITE}
-                                size={18}
-                                containerStyle={styles.iconContainer}
-                            />
-                            <Input
-                                editable={true}
-                                underlineColorAndroid={colors.TRANSPARENT}
-                                placeholder={language.vehicle_reg_no}
-                                placeholderTextColor={colors.WHITE}
-                                value={state.vehicleNumber}
-                                inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => { setState({ ...state, vehicleNumber: text }) }}
-                                inputContainerStyle={styles.inputContainerStyle}
-                                containerStyle={styles.textInputStyle}
-                            />
-                        </View>
-                        :null}
-                        {state.usertype == 'driver' ? 
-                        <View style={styles.textInputContainerStyle}>
-                            <Icon
-                                name='car'
-                                type='font-awesome'
-                                color={colors.WHITE}
-                                size={18}
-                                containerStyle={styles.iconContainer}
-                            />
-                            <Input
-                                editable={true}
-                                underlineColorAndroid={colors.TRANSPARENT}
-                                placeholder={language.other_info}
-                                placeholderTextColor={colors.WHITE}
-                                value={state.other_info}
-                                inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => { setState({ ...state, other_info: text }) }}
-                                inputContainerStyle={styles.inputContainerStyle}
-                                containerStyle={styles.textInputStyle}
-                            />
-                        </View>
-                        :null}
-                        {state.usertype == 'driver' ? 
+                                {props.cars ?
+                                    <RNPickerSelect
+                                        placeholder={{}}
+                                        value={state.carType}
+                                        useNativeAndroidPickerStyle={true}
+                                        style={{
+                                            inputIOS: styles.pickerStyle,
+                                            placeholder: {
+                                                color: 'white'
+                                            },
+                                            inputAndroid: styles.pickerStyle
+                                        }}
+                                        onValueChange={(value) => setState({...state, carType: value})}
+                                        items={props.cars}
+                                    />
+                                    : null}
+                            </View>
+                            : null}
+                        {state.usertype == 'driver' ?
+                            <View style={styles.textInputContainerStyle}>
+                                <Icon
+                                    name='car'
+                                    type='font-awesome'
+                                    color={colors.WHITE}
+                                    size={18}
+                                    containerStyle={styles.iconContainer}
+                                />
+                                <Input
+                                    editable={true}
+                                    returnKeyType={'next'}
+                                    underlineColorAndroid={colors.TRANSPARENT}
+                                    placeholder={language.vehicle_model_name}
+                                    placeholderTextColor={colors.WHITE}
+                                    value={state.vehicleMake}
+                                    inputStyle={styles.inputTextStyle}
+                                    onChangeText={(text) => {
+                                        setState({...state, vehicleMake: text})
+                                    }}
+                                    inputContainerStyle={styles.inputContainerStyle}
+                                    containerStyle={styles.textInputStyle}
+                                />
+                            </View>
+                            : null}
+                        {state.usertype == 'driver' ?
+                            <View style={styles.textInputContainerStyle}>
+                                <Icon
+                                    name='car'
+                                    type='font-awesome'
+                                    color={colors.WHITE}
+                                    size={18}
+                                    containerStyle={styles.iconContainer}
+                                />
+                                <Input
+                                    editable={true}
+                                    underlineColorAndroid={colors.TRANSPARENT}
+                                    placeholder={language.vehicle_model_no}
+                                    placeholderTextColor={colors.WHITE}
+                                    value={state.vehicleModel}
+                                    inputStyle={styles.inputTextStyle}
+                                    onChangeText={(text) => {
+                                        setState({...state, vehicleModel: text})
+                                    }}
+                                    inputContainerStyle={styles.inputContainerStyle}
+                                    containerStyle={styles.textInputStyle}
+                                />
+                            </View>
+                            : null}
+                        {state.usertype == 'driver' ?
+                            <View style={styles.textInputContainerStyle}>
+                                <Icon
+                                    name='car'
+                                    type='font-awesome'
+                                    color={colors.WHITE}
+                                    size={18}
+                                    containerStyle={styles.iconContainer}
+                                />
+                                <Input
+                                    editable={true}
+                                    underlineColorAndroid={colors.TRANSPARENT}
+                                    placeholder={language.vehicle_reg_no}
+                                    placeholderTextColor={colors.WHITE}
+                                    value={state.vehicleNumber}
+                                    inputStyle={styles.inputTextStyle}
+                                    onChangeText={(text) => {
+                                        setState({...state, vehicleNumber: text})
+                                    }}
+                                    inputContainerStyle={styles.inputContainerStyle}
+                                    containerStyle={styles.textInputStyle}
+                                />
+                            </View>
+                            : null}
                         <View style={styles.textInputContainerStyle}>
                             <Icon
                                 name='numeric'
@@ -537,13 +718,13 @@ export default function Registration(props) {
                                 placeholderTextColor={colors.WHITE}
                                 value={state.bankName}
                                 inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => { setState({ ...state, bankName: text }) }}
+                                onChangeText={(text) => {
+                                    setState({...state, bankName: text})
+                                }}
                                 inputContainerStyle={styles.inputContainerStyle}
                                 containerStyle={styles.textInputStyle}
                             />
                         </View>
-                        :null}
-                        {state.usertype == 'driver' ? 
                         <View style={styles.textInputContainerStyle}>
                             <Icon
                                 name='numeric'
@@ -559,13 +740,13 @@ export default function Registration(props) {
                                 placeholderTextColor={colors.WHITE}
                                 value={state.bankCode}
                                 inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => { setState({ ...state, bankCode: text }) }}
+                                onChangeText={(text) => {
+                                    setState({...state, bankCode: text})
+                                }}
                                 inputContainerStyle={styles.inputContainerStyle}
                                 containerStyle={styles.textInputStyle}
                             />
                         </View>
-                        :null}
-                        {state.usertype == 'driver' ? 
                         <View style={styles.textInputContainerStyle}>
                             <Icon
                                 name='numeric'
@@ -581,41 +762,47 @@ export default function Registration(props) {
                                 placeholderTextColor={colors.WHITE}
                                 value={state.bankAccount}
                                 inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => { setState({ ...state, bankAccount: text }) }}
+                                onChangeText={(text) => {
+                                    setState({...state, bankAccount: text})
+                                }}
                                 inputContainerStyle={styles.inputContainerStyle}
                                 containerStyle={styles.textInputStyle}
                             />
                         </View>
-                        :null}
                         {state.usertype == 'driver' ?
-                            capturedImage?
+                            capturedImageDrivingLicense ?
                                 <View style={styles.imagePosition}>
-                                    <TouchableOpacity style={styles.photoClick} onPress={cancelPhoto}>
-                                        <Image source={require('../../assets/images/cross.png')} resizeMode={'contain'} style={styles.imageStyle} />
+                                    <TouchableOpacity style={styles.photoClick} onPress={cancelPhotoDrivingLicense}>
+                                        <Image source={require('../../assets/images/cross.png')} resizeMode={'contain'}
+                                               style={styles.imageStyle}/>
                                     </TouchableOpacity>
-                                    <Image source={{ uri: capturedImage }} style={styles.photoResult} resizeMode={'cover'} />
+                                    <Image source={{uri: capturedImageDrivingLicense}} style={styles.photoResult}
+                                           resizeMode={'cover'}/>
                                 </View>
                                 :
                                 <View style={styles.capturePhoto}>
                                     <View>
                                         {
                                             state.imageValid ?
-                                                <Text style={styles.capturePhotoTitle}>{language.upload_driving_license}</Text>
+                                                <Text
+                                                    style={styles.capturePhotoTitle}>{language.upload_driving_license}</Text>
                                                 :
-                                                <Text style={styles.errorPhotoTitle}>{language.upload_driving_license}</Text>
+                                                <Text
+                                                    style={styles.errorPhotoTitle}>{language.upload_driving_license}</Text>
                                         }
 
                                     </View>
                                     <View style={styles.capturePicClick}>
-                                        <TouchableOpacity style={styles.flexView1} onPress={CapturePhoto}>
+                                        <TouchableOpacity style={styles.flexView1} onPress={CapturePhotoDrivingLicense}>
                                             <View>
                                                 <View style={styles.imageFixStyle}>
-                                                    <Image source={require('../../assets/images/camera.png')} resizeMode={'contain'} style={styles.imageStyle2} />
+                                                    <Image source={require('../../assets/images/camera.png')}
+                                                           resizeMode={'contain'} style={styles.imageStyle2}/>
                                                 </View>
                                             </View>
                                         </TouchableOpacity>
                                         <View style={styles.myView}>
-                                            <View style={styles.myView1} />
+                                            <View style={styles.myView1}/>
                                         </View>
                                         <View style={styles.myView2}>
                                             <View style={styles.myView3}>
@@ -624,7 +811,175 @@ export default function Registration(props) {
                                         </View>
                                     </View>
                                 </View>
-                        :null}
+                            : null}
+                        {state.usertype == 'driver' ?
+                            capturedImageDrivingLicenseS ?
+                                <View style={styles.imagePosition}>
+                                    <TouchableOpacity style={styles.photoClick} onPress={cancelPhotoDrivingLicenseS}>
+                                        <Image source={require('../../assets/images/cross.png')} resizeMode={'contain'}
+                                               style={styles.imageStyle}/>
+                                    </TouchableOpacity>
+                                    <Image source={{uri: capturedImageDrivingLicenseS}} style={styles.photoResult}
+                                           resizeMode={'cover'}/>
+                                </View>
+                                :
+                                <View style={styles.capturePhoto}>
+                                    <View>
+                                        {
+                                            state.imageValid ?
+                                                <Text
+                                                    style={styles.capturePhotoTitle}>{language.upload_driving_license_s}</Text>
+                                                :
+                                                <Text
+                                                    style={styles.errorPhotoTitle}>{language.upload_driving_license_s}</Text>
+                                        }
+
+                                    </View>
+                                    <View style={styles.capturePicClick}>
+                                        <TouchableOpacity style={styles.flexView1}
+                                                          onPress={CapturePhotoDrivingLicenseS}>
+                                            <View>
+                                                <View style={styles.imageFixStyle}>
+                                                    <Image source={require('../../assets/images/camera.png')}
+                                                           resizeMode={'contain'} style={styles.imageStyle2}/>
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
+                                        <View style={styles.myView}>
+                                            <View style={styles.myView1}/>
+                                        </View>
+                                        <View style={styles.myView2}>
+                                            <View style={styles.myView3}>
+                                                <Text style={styles.textStyle}>{language.image_size_warning}</Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                </View>
+                            : null}
+                        {state.usertype == 'driver' ?
+                            capturedImageCmnd ?
+                                <View style={styles.imagePosition}>
+                                    <TouchableOpacity style={styles.photoClick} onPress={cancelPhotoCmnd}>
+                                        <Image source={require('../../assets/images/cross.png')} resizeMode={'contain'}
+                                               style={styles.imageStyle}/>
+                                    </TouchableOpacity>
+                                    <Image source={{uri: capturedImageCmnd}} style={styles.photoResult}
+                                           resizeMode={'cover'}/>
+                                </View>
+                                :
+                                <View style={styles.capturePhoto}>
+                                    <View>
+                                        {
+                                            state.imageValid ?
+                                                <Text style={styles.capturePhotoTitle}>{language.upload_cmnd}</Text>
+                                                :
+                                                <Text style={styles.errorPhotoTitle}>{language.upload_cmnd}</Text>
+                                        }
+
+                                    </View>
+                                    <View style={styles.capturePicClick}>
+                                        <TouchableOpacity style={styles.flexView1} onPress={CapturePhotoCmnd}>
+                                            <View>
+                                                <View style={styles.imageFixStyle}>
+                                                    <Image source={require('../../assets/images/camera.png')}
+                                                           resizeMode={'contain'} style={styles.imageStyle2}/>
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
+                                        <View style={styles.myView}>
+                                            <View style={styles.myView1}/>
+                                        </View>
+                                        <View style={styles.myView2}>
+                                            <View style={styles.myView3}>
+                                                <Text style={styles.textStyle}>{language.image_size_warning}</Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                </View>
+                            : null}
+                        {state.usertype == 'driver' ?
+                            capturedImageCmndS ?
+                                <View style={styles.imagePosition}>
+                                    <TouchableOpacity style={styles.photoClick} onPress={cancelPhotoCmndS}>
+                                        <Image source={require('../../assets/images/cross.png')} resizeMode={'contain'}
+                                               style={styles.imageStyle}/>
+                                    </TouchableOpacity>
+                                    <Image source={{uri: capturedImageCmndS}} style={styles.photoResult}
+                                           resizeMode={'cover'}/>
+                                </View>
+                                :
+                                <View style={styles.capturePhoto}>
+                                    <View>
+                                        {
+                                            state.imageValid ?
+                                                <Text style={styles.capturePhotoTitle}>{language.upload_cmnd_s}</Text>
+                                                :
+                                                <Text style={styles.errorPhotoTitle}>{language.upload_cmnd_s}</Text>
+                                        }
+
+                                    </View>
+                                    <View style={styles.capturePicClick}>
+                                        <TouchableOpacity style={styles.flexView1} onPress={CapturePhotoCmndS}>
+                                            <View>
+                                                <View style={styles.imageFixStyle}>
+                                                    <Image source={require('../../assets/images/camera.png')}
+                                                           resizeMode={'contain'} style={styles.imageStyle2}/>
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
+                                        <View style={styles.myView}>
+                                            <View style={styles.myView1}/>
+                                        </View>
+                                        <View style={styles.myView2}>
+                                            <View style={styles.myView3}>
+                                                <Text style={styles.textStyle}>{language.image_size_warning}</Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                </View>
+                            : null}
+
+                        {state.usertype == 'driver' ?
+                            capturedImageBienSoXe ?
+                                <View style={styles.imagePosition}>
+                                    <TouchableOpacity style={styles.photoClick} onPress={cancelPhotoBienSoXe}>
+                                        <Image source={require('../../assets/images/cross.png')} resizeMode={'contain'}
+                                               style={styles.imageStyle}/>
+                                    </TouchableOpacity>
+                                    <Image source={{uri: capturedImageBienSoXe}} style={styles.photoResult}
+                                           resizeMode={'cover'}/>
+                                </View>
+                                :
+                                <View style={styles.capturePhoto}>
+                                    <View>
+                                        {
+                                            state.imageValid ?
+                                                <Text style={styles.capturePhotoTitle}>{language.anh_bien_so_xe}</Text>
+                                                :
+                                                <Text style={styles.errorPhotoTitle}>{language.anh_bien_so_xe}</Text>
+                                        }
+
+                                    </View>
+                                    <View style={styles.capturePicClick}>
+                                        <TouchableOpacity style={styles.flexView1} onPress={CapturePhotoBienSoXe}>
+                                            <View>
+                                                <View style={styles.imageFixStyle}>
+                                                    <Image source={require('../../assets/images/camera.png')}
+                                                           resizeMode={'contain'} style={styles.imageStyle2}/>
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
+                                        <View style={styles.myView}>
+                                            <View style={styles.myView1}/>
+                                        </View>
+                                        <View style={styles.myView2}>
+                                            <View style={styles.myView3}>
+                                                <Text style={styles.textStyle}>{language.image_size_warning}</Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                </View>
+                            : null}
                         <View style={styles.buttonContainer}>
                             <Button
                                 onPress={onPressRegister}
@@ -634,13 +989,14 @@ export default function Registration(props) {
                                 buttonStyle={styles.registerButton}
                             />
                         </View>
-                        <View style={styles.gapView} />
+                        <View style={styles.gapView}/>
                     </View>
                 </KeyboardAvoidingView>
             </ScrollView>
         </Background>
     );
-};
+}
+;
 
 const styles = {
     headerContainerStyle: {
@@ -688,8 +1044,8 @@ const styles = {
         width: 200,
         fontSize: 15,
         height: 40,
-        marginLeft: Platform.OS=='ios'? 20:10,
-        marginTop:Platform.OS=='ios'? 0:10, 
+        marginLeft: Platform.OS == 'ios' ? 20 : 10,
+        marginTop: Platform.OS == 'ios' ? 0 : 10,
         borderBottomWidth: 1,
         borderBottomColor: colors.WHITE,
     },
@@ -726,8 +1082,8 @@ const styles = {
         marginLeft: 20,
         marginRight: 20,
         paddingLeft: 15,
-        paddingRight:15,
-        paddingTop:10,
+        paddingRight: 15,
+        paddingTop: 10,
     },
     headerStyle: {
         fontSize: 18,
