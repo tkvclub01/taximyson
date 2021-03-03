@@ -131,7 +131,7 @@ export default function EditProfilePage(props) {
                                 containerStyle={styles.textInputStyle}
                             />
                         </View>
-                        <View style={styles.textInputContainerStyle}>
+                       {/* <View style={styles.textInputContainerStyle}>
                             <Icon
                                 name='envelope'
                                 type='font-awesome'
@@ -154,7 +154,7 @@ export default function EditProfilePage(props) {
                                 inputContainerStyle={styles.inputContainerStyle}
                                 containerStyle={styles.textInputStyle}
                             />
-                        </View>
+                        </View>*/}
                         <View style={styles.textInputContainerStyle}>
                             <Icon
                                 name='mobile-phone'

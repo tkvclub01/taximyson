@@ -100,7 +100,7 @@ export default function LoginPage(props) {
         setCommonAlert({ open: true, msg: language.password_complexity_check })
       }
     }
-    return passwordValid
+    return passwordValid;
   }
 
   const handleRegister = (e) => {
@@ -108,8 +108,8 @@ export default function LoginPage(props) {
     //eslint-disable-next-line
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     if (state.firstName.length > 0 && state.lastName.length > 0) {
-      if (re.test(state.email)) {
-        if (validatePassword('alphanumeric')) {
+      //if (re.test(state.email)) {
+       // if (validatePassword('any')) {
           if (validateMobile()) {
             checkUserExists(state).then((res) => {
               if (res.users && res.users.length > 0) {
@@ -155,10 +155,10 @@ export default function LoginPage(props) {
           } else {
             setCommonAlert({ open: true, msg: language.mobile_no_blank_error });
           }
-        }
-      } else {
+       // }
+     /* } else {
         setCommonAlert({ open: true, msg: language.proper_email });
-      }
+      }*/
     } else {
       setCommonAlert({ open: true, msg: language.proper_input_name });
 
@@ -251,22 +251,29 @@ export default function LoginPage(props) {
                       value={state.lastName}
                     />
                     <CustomInput
-                      labelText={language.email}
-                      id="email"
-                      formControlProps={{
-                        fullWidth: true
-                      }}
-                      inputProps={{
-                        type: "email",
-                        required: true,
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <Email className={classes.inputIconsColor} />
-                          </InputAdornment>
-                        )
-                      }}
-                      onChange={onInputChange}
-                      value={state.email}
+                        labelText={language.phone}
+                        id="mobile"
+                        formControlProps={{
+                          fullWidth: true
+                        }}
+                        inputProps={{
+                          required: true,
+                          disabled: state.verificationId ? true : false,
+                          endAdornment: (
+                              <InputAdornment position="end">
+                                <PhoneIcon className={classes.inputIconsColor} />
+                              </InputAdornment>
+                          )
+                        }}
+                        onChange={
+                          (event) => {
+                            setMobileWithoutCountry(event.target.value)
+                            let formattedNum = event.target.value.replace(/ /g, '');
+                            formattedNum = "+" + countryCode.phone + formattedNum.replace(/-/g, '');
+                            setState({ ...state, mobile: formattedNum })
+                          }
+                        }
+                        value={mobileWithoutCountry}
                     />
                     <CustomInput
                       labelText={language.password}
@@ -304,31 +311,7 @@ export default function LoginPage(props) {
                         disabled={state.verificationId ? true : false}
                       />
                       : null}
-                    <CustomInput
-                      labelText={language.phone}
-                      id="mobile"
-                      formControlProps={{
-                        fullWidth: true
-                      }}
-                      inputProps={{
-                        required: true,
-                        disabled: state.verificationId ? true : false,
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <PhoneIcon className={classes.inputIconsColor} />
-                          </InputAdornment>
-                        )
-                      }}
-                      onChange={
-                        (event) => {
-                          setMobileWithoutCountry(event.target.value)
-                          let formattedNum = event.target.value.replace(/ /g, '');
-                          formattedNum = "+" + countryCode.phone + formattedNum.replace(/-/g, '');
-                          setState({ ...state, mobile: formattedNum })
-                        }
-                      }
-                      value={mobileWithoutCountry}
-                    />
+
                     <CustomInput    // LAST NAME
                       labelText={language.referralId}
                       id="referralId"

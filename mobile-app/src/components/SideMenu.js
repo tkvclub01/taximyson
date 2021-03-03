@@ -92,7 +92,7 @@ export default function SideMenu(props){
     return (
         <View style={styles.mainViewStyle}>
             {auth.info && auth.info.profile?
-                <SideMenuHeader headerStyle={styles.myHeader} userPhoto={auth.info.profile.profile_image} userEmail={auth.info.profile.email} userName={auth.info.profile.firstName + ' ' + auth.info.profile.lastName} ></SideMenuHeader>
+                <SideMenuHeader headerStyle={styles.myHeader} userPhoto={auth.info.profile.profile_image} userMobile={auth.info.profile.mobile} userName={auth.info.profile.firstName + ' ' + auth.info.profile.lastName} ></SideMenuHeader>
             :null}
             <View style={styles.compViewStyle}>
                 <View style={[styles.vertialLine, { height: (width <= 320) ? width / 1.53 : width / 1.68 }]}></View>

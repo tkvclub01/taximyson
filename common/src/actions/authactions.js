@@ -179,7 +179,7 @@ export const checkUserExists = async (regData) => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      email: regData.email,
+      email: regData.email ? regData.email : ' ',
       mobile: regData.mobile
     })
   })
@@ -252,7 +252,7 @@ export const requestPhoneOtpDevice = (phoneNumber, appVerifier) => (dispatch) =>
       type: REQUEST_OTP_FAILED,
       payload: error
     });
-  };
+  }
 }
 
 export const mobileSignIn = (verficationId, code) => (dispatch) => (firebase) => {

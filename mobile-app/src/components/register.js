@@ -323,17 +323,15 @@ export default function Registration(props) {
     onPressRegister = () => {
         const {onPressRegister} = props;
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        //if(re.test(state.email)){
+        if(re.test(state.email) && state.email.length > 5 || state.email.length == 0){
         let isValidDriver = false;
         let validUser = false;
         if (state.firstName.length < 1 || state.lastName.length < 1) {
             Alert.alert(language.alert, language.mobile_no_blank_error);
-        } else if (validatePassword('alphanumeric')) {
-            if (validateMobile()) {
-                validUser = true;
-            } else {
-                Alert.alert(language.alert, language.mobile_no_blank_error);
-            }
+        } else if (validateMobile()) {
+            validUser = true;
+        }else {
+            Alert.alert(language.alert, language.mobile_no_blank_error);
         }
         if (state.usertype == 'driver' && validUser) {
             if (state.licenseSImage == null) {
@@ -358,9 +356,9 @@ export default function Registration(props) {
             onPressRegister(state);
         }
 
-        /*}else{
+        }else{
             Alert.alert(language.alert,language.proper_email);
-        }*/
+        }
     }
 
 
@@ -518,68 +516,7 @@ export default function Registration(props) {
                                 containerStyle={styles.textInputStyle}
                             />
                         </View>
-                        <View style={styles.textInputContainerStyle}>
-                            <Icon
-                                name='envelope-o'
-                                type='font-awesome'
-                                color={colors.WHITE}
-                                size={18}
-                                containerStyle={styles.iconContainer}
-                            />
-                            <Input
-                                underlineColorAndroid={colors.TRANSPARENT}
-                                placeholder={language.email_placeholder}
-                                placeholderTextColor={colors.WHITE}
-                                value={state.email}
-                                keyboardType={'email-address'}
-                                inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => {
-                                    setState({...state, email: text})
-                                }}
-                                inputContainerStyle={styles.inputContainerStyle}
-                                containerStyle={styles.textInputStyle}
-                            />
-                        </View>
-                        <View style={styles.textInputContainerStyle}>
-                            <Icon
-                                name='lock'
-                                type='font-awesome'
-                                color={colors.WHITE}
-                                size={24}
-                                containerStyle={styles.iconContainer}
-                            />
-                            <Input
-                                underlineColorAndroid={colors.TRANSPARENT}
-                                placeholder={language.password_placeholder}
-                                placeholderTextColor={colors.WHITE}
-                                value={state.password}
-                                inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => setState({...state, password: text})}
-                                inputContainerStyle={styles.inputContainerStyle}
-                                containerStyle={styles.textInputStyle}
-                                secureTextEntry={true}
-                            />
-                        </View>
-                        <View style={styles.textInputContainerStyle}>
-                            <Icon
-                                name='lock'
-                                type='font-awesome'
-                                color={colors.WHITE}
-                                size={24}
-                                containerStyle={styles.iconContainer}
-                            />
-                            <Input
-                                underlineColorAndroid={colors.TRANSPARENT}
-                                placeholder={language.confrim_password_placeholder}
-                                placeholderTextColor={colors.WHITE}
-                                value={confirmpassword}
-                                inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => setConfirmPassword(text)}
-                                inputContainerStyle={styles.inputContainerStyle}
-                                containerStyle={styles.textInputStyle}
-                                secureTextEntry={true}
-                            />
-                        </View>
+                        {state.usertype == 'driver' ?
                         <View style={styles.textInputContainerStyle}>
                             <Icon
                                 name='lock'
@@ -603,6 +540,7 @@ export default function Registration(props) {
                                 containerStyle={styles.textInputStyle}
                             />
                         </View>
+                       : null}
                         {state.usertype == 'driver' ?
                             <View style={[styles.textInputContainerStyle, {marginTop: 10, marginBottom: 10}]}>
                                 <Icon
@@ -703,72 +641,78 @@ export default function Registration(props) {
                                 />
                             </View>
                             : null}
-                        <View style={styles.textInputContainerStyle}>
-                            <Icon
-                                name='numeric'
-                                type={'material-community'}
-                                color={colors.WHITE}
-                                size={20}
-                                containerStyle={styles.iconContainer}
-                            />
-                            <Input
-                                editable={true}
-                                underlineColorAndroid={colors.TRANSPARENT}
-                                placeholder={language.bankName}
-                                placeholderTextColor={colors.WHITE}
-                                value={state.bankName}
-                                inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => {
-                                    setState({...state, bankName: text})
-                                }}
-                                inputContainerStyle={styles.inputContainerStyle}
-                                containerStyle={styles.textInputStyle}
-                            />
-                        </View>
-                        <View style={styles.textInputContainerStyle}>
-                            <Icon
-                                name='numeric'
-                                type={'material-community'}
-                                color={colors.WHITE}
-                                size={20}
-                                containerStyle={styles.iconContainer}
-                            />
-                            <Input
-                                editable={true}
-                                underlineColorAndroid={colors.TRANSPARENT}
-                                placeholder={language.bankCode}
-                                placeholderTextColor={colors.WHITE}
-                                value={state.bankCode}
-                                inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => {
-                                    setState({...state, bankCode: text})
-                                }}
-                                inputContainerStyle={styles.inputContainerStyle}
-                                containerStyle={styles.textInputStyle}
-                            />
-                        </View>
-                        <View style={styles.textInputContainerStyle}>
-                            <Icon
-                                name='numeric'
-                                type={'material-community'}
-                                color={colors.WHITE}
-                                size={20}
-                                containerStyle={styles.iconContainer}
-                            />
-                            <Input
-                                editable={true}
-                                underlineColorAndroid={colors.TRANSPARENT}
-                                placeholder={language.bankAccount}
-                                placeholderTextColor={colors.WHITE}
-                                value={state.bankAccount}
-                                inputStyle={styles.inputTextStyle}
-                                onChangeText={(text) => {
-                                    setState({...state, bankAccount: text})
-                                }}
-                                inputContainerStyle={styles.inputContainerStyle}
-                                containerStyle={styles.textInputStyle}
-                            />
-                        </View>
+                         {state.usertype == 'driver' ?   
+                            <View style={styles.textInputContainerStyle}>
+                                <Icon
+                                    name='numeric'
+                                    type={'material-community'}
+                                    color={colors.WHITE}
+                                    size={20}
+                                    containerStyle={styles.iconContainer}
+                                />
+                                <Input
+                                    editable={true}
+                                    underlineColorAndroid={colors.TRANSPARENT}
+                                    placeholder={language.bankName}
+                                    placeholderTextColor={colors.WHITE}
+                                    value={state.bankName}
+                                    inputStyle={styles.inputTextStyle}
+                                    onChangeText={(text) => {
+                                        setState({...state, bankName: text})
+                                    }}
+                                    inputContainerStyle={styles.inputContainerStyle}
+                                    containerStyle={styles.textInputStyle}
+                                />
+                            </View>
+                          : null} 
+                          {state.usertype == 'driver' ?    
+                            <View style={styles.textInputContainerStyle}>
+                                <Icon
+                                    name='numeric'
+                                    type={'material-community'}
+                                    color={colors.WHITE}
+                                    size={20}
+                                    containerStyle={styles.iconContainer}
+                                />
+                                <Input
+                                    editable={true}
+                                    underlineColorAndroid={colors.TRANSPARENT}
+                                    placeholder={language.bankCode}
+                                    placeholderTextColor={colors.WHITE}
+                                    value={state.bankCode}
+                                    inputStyle={styles.inputTextStyle}
+                                    onChangeText={(text) => {
+                                        setState({...state, bankCode: text})
+                                    }}
+                                    inputContainerStyle={styles.inputContainerStyle}
+                                    containerStyle={styles.textInputStyle}
+                                />
+                            </View>
+                            : null} 
+                            {state.usertype == 'driver' ?    
+                            <View style={styles.textInputContainerStyle}>
+                                <Icon
+                                    name='numeric'
+                                    type={'material-community'}
+                                    color={colors.WHITE}
+                                    size={20}
+                                    containerStyle={styles.iconContainer}
+                                />
+                                <Input
+                                    editable={true}
+                                    underlineColorAndroid={colors.TRANSPARENT}
+                                    placeholder={language.bankAccount}
+                                    placeholderTextColor={colors.WHITE}
+                                    value={state.bankAccount}
+                                    inputStyle={styles.inputTextStyle}
+                                    onChangeText={(text) => {
+                                        setState({...state, bankAccount: text})
+                                    }}
+                                    inputContainerStyle={styles.inputContainerStyle}
+                                    containerStyle={styles.textInputStyle}
+                                />
+                            </View>
+                         : null} 
                         {state.usertype == 'driver' ?
                             capturedImageDrivingLicense ?
                                 <View style={styles.imagePosition}>

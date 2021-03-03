@@ -1,4 +1,4 @@
-import {store} from "..";
+import { store } from '../store/store';
 
 export function FareCalculator(distance, time, rateDetails) {
     let settings = store.getState().settingsdata.settings;

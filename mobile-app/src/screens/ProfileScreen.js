@@ -212,7 +212,7 @@ export default function ProfileScreen(props) {
                 </View>
 
                 <View style={styles.newViewStyle}>
-                    <View style={styles.myViewStyle}>
+                   {/* <View style={styles.myViewStyle}>
                         <View style={styles.iconViewStyle}>
                             <Icon
                                 name='envelope-letter'
@@ -225,7 +225,7 @@ export default function ProfileScreen(props) {
                         <View style={styles.flexView1}>
                             <Text style={styles.emailAdressStyle}>{profileData ? profileData.email : ''}</Text>
                         </View>
-                    </View>
+                    </View>*/}
                     <View style={styles.myViewStyle}>
                         <View style={styles.iconViewStyle}>
                             <Icon
@@ -334,7 +334,7 @@ export default function ProfileScreen(props) {
 
                 <View style={styles.flexView3}>
 
-                    <TouchableOpacity style={styles.textIconStyle2} onPress={deleteAccount}>
+                    {/*<TouchableOpacity style={styles.textIconStyle2} onPress={deleteAccount}>
                         <Text style={styles.emailStyle}>{language.delete_account_lebel}</Text>
                         <Icon
                             name='ios-arrow-forward'
@@ -343,7 +343,7 @@ export default function ProfileScreen(props) {
                             size={35}
                             containerStyle={{ right: 20 }}
                         />
-                    </TouchableOpacity>
+                    </TouchableOpacity>*/}
 
                     <TouchableOpacity onPress={logOff} style={styles.textIconStyle2}>
                         <Text style={styles.emailStyle}>{language.logout}</Text>

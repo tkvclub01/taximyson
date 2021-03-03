@@ -3,6 +3,6 @@ export const features =  {
     AllowCountrySelection:false,
     WebsitePagesEnabled:true,
     MobileLoginEnabled:true,
-    FacebookLoginEnabled:true,
-    AppleLoginEnabled:true
+    FacebookLoginEnabled:false,
+    AppleLoginEnabled:false
 };

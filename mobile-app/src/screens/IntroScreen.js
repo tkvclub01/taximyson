@@ -113,7 +113,6 @@ export default function IntroScreen(props) {
         Linking.openURL(settings.CompanyTerms).catch(err => console.error("Couldn't load page", err));
     }
 
-
     return (
         <ImageBackground
             source={require('../../assets/images/bg.jpg')}

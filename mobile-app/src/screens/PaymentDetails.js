@@ -140,7 +140,8 @@ export default function PaymentDetails(props) {
         }
     }else{
       let payData = {
-        email: userdata.email,
+        email: userdata.email ? userdata.email : ' ',
+        mobile: userdata.mobile ? userdata.mobile : ' ',
         amount: payDetails.payableAmmount,
         order_id: booking.id,
         name: language.bookingPayment,

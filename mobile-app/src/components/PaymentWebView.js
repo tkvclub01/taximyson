@@ -40,7 +40,7 @@ export default function PaymentWebView(props) {
           + '&quantity=' + props.payData.quantity
           + '&cust_id=' + props.payData.cust_id
           + '&mobile_no=' + props.payData.mobile_no
-          + '&email=' + props.payData.email
+          + '&email=' + (props.payData.email) ? props.payData.email : ''
       }}
       onLoadStart={onLoadStart}
     />

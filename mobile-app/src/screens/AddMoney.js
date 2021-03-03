@@ -46,7 +46,8 @@ export default function AddMoneyScreen(props) {
     var d = new Date();
     var time = d.getTime();
     let payData = {
-      email: state.userdata.email,
+      email: state.userdata.email ? state.userdata.email : ' ',
+      mobile: state.userdata.mobile ? state.userdata.mobile : ' ',
       amount: state.amount,
       order_id: time.toString(),
       name: language.add_money,

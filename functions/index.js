@@ -6,43 +6,11 @@ const language = require('./language.json');
 
 admin.initializeApp();
 
-/*const providers = [
-    'paypal',
-    'braintree',
-    'stripe',
-    'paytm',
-    'payulatam',
-    'flutterwave',
-    'paystack',
-    'securepay',
-    'payfast',
-    'liqpay',
-    'culqi'
-]
-
-exports.paypal = require('./providers/paypal');
-exports.braintree = require('./providers/braintree');
-exports.stripe = require('./providers/stripe');
-exports.paytm = require('./providers/paytm');
-exports.payulatam = require('./providers/payulatam');
-exports.flutterwave = require('./providers/flutterwave');
-exports.paystack = require('./providers/paystack');
-exports.securepay = require('./providers/securepay');
-exports.payfast = require('./providers/payfast');
-exports.liqpay = require('./providers/liqpay');
-exports.culqi = require('./providers/culqi');*/
-
 const providers = [
-    'vnpay',
-    'onepay',
-    'nganluong',
-    'baokim'
+    'vnpay'
 ]
 
 exports.vnpay = require('./providers/vnpay');
-exports.onepay = require('./providers/onepay');
-exports.nganluong = require('./providers/nganluong');
-exports.baokim = require('./providers/baokim');
 
 exports.get_providers = functions.https.onRequest((request, response) => {
     let arr = [];
@@ -437,7 +405,7 @@ exports.check_user_exists = functions.https.onRequest((request, response) => {
     let arr = [];
 
     if (request.body.email || request.body.mobile) {
-        if (request.body.email) {
+        if (request.body.email && request.body.email.length > 5) {
             arr.push({email: request.body.email});
         }
         if (request.body.mobile) {
@@ -515,28 +483,29 @@ exports.user_signup = functions.https.onRequest(async (request, response) => {
             firstName: userDetails.firstName,
             lastName: userDetails.lastName,
             mobile: userDetails.mobile,
-            email: userDetails.email ? userDetails.email : ' ',
+            email: userDetails.email ? userDetails.email : userDetails.mobile + "@etoviet.vn",
             usertype: userDetails.usertype,
             referralId: userDetails.firstName.toLowerCase() + Math.floor(1000 + Math.random() * 9000).toString(),
             approved: true,
             walletBalance: 0,
             pushToken: 'init',
-            bankCode: userDetails.bankCode,
-            bankName: userDetails.bankName,
-            bankAccount: userDetails.bankAccount
+            bankCode: userDetails.bankCode ? userDetails.bankCode : ' ',
+            bankName: userDetails.bankName ? userDetails.bankName : ' ',
+            bankAccount: userDetails.bankAccount ? userDetails.bankAccount : ' '
         };
         let settingdata = await admin.database().ref('settings').once("value");
         let settings = settingdata.val();
         if (userDetails.usertype === 'driver') {
-            regData.vehicleNumber = userDetails.vehicleNumber;
-            regData.vehicleModel = userDetails.vehicleModel;
-            regData.vehicleMake = userDetails.vehicleMake;
+            regData.vehicleNumber = userDetails.vehicleNumber ? userDetails.vehicleNumber : ' ';
+            regData.vehicleModel = userDetails.vehicleModel ? userDetails.vehicleModel : ' ';
+            regData.vehicleMake = userDetails.vehicleMake ? userDetails.vehicleMake : ' ';
             regData.carType = userDetails.carType;
             regData.licenseImage = userDetails.licenseImage
             regData.licenseSImage = userDetails.licenseSImage;
             regData.cmnd = userDetails.cmnd;
             regData.cmndS = userDetails.cmndS;
             regData.anhBienSoXe = userDetails.anhBienSoXe;
+            regData.codeDriver = userDetails.mobile;
             regData.queue = false;
             regData.driverActiveStatus = true;
             if (settings.driver_approval) {
@@ -544,9 +513,9 @@ exports.user_signup = functions.https.onRequest(async (request, response) => {
             }
         }
         let userRecord = await admin.auth().createUser({
-            email: userDetails.email ? userDetails.email : " ",
+            email: userDetails.email ? userDetails.email : userDetails.mobile + "@etoviet.vn",
             phoneNumber: userDetails.mobile,
-            password: userDetails.password,
+            password: userDetails.password ? userDetails.password : userDetails.mobile,
             emailVerified: settings.email_verify ? false : true
         });
         if (userRecord && userRecord.uid) {

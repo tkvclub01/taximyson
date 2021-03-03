@@ -3,7 +3,7 @@ import { Text, View, Image,TouchableOpacity, Platform, StatusBar } from 'react-n
 import { Icon } from 'react-native-elements'
 import { colors } from '../common/theme';
 //make a compontent
-const SideMenuHeader = ({headerStyle,userPhoto,userName,userEmail}) =>{
+const SideMenuHeader = ({headerStyle,userPhoto,userName,userMobile}) =>{
    return (
         <View style={[styles.viewStyle,headerStyle]}>
             <TouchableOpacity style={styles.userImageView} >
@@ -22,7 +22,7 @@ const SideMenuHeader = ({headerStyle,userPhoto,userName,userEmail}) =>{
                     color={colors.WHITE}
                     size={16}
                 />
-                <Text style={styles.emailStyle}>{userEmail?userEmail.toLowerCase():""}</Text>
+                <Text style={styles.emailStyle}>{userMobile?userMobile:""}</Text>
             </View>
         </View>
    );

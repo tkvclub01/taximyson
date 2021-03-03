@@ -157,9 +157,9 @@ export default function AddBookings(props) {
             'firstName': user.firstName,
             'lastName': user.lastName,
             'mobile': user.mobile,
-            'email': user.email,
+            'email': user.email ? user.email : ' ',
             'uid': user.id,
-            'desc': user.firstName + ' ' + user.lastName + ' (' + user.mobile + ') ' + user.email,
+            'desc': user.firstName + ' ' + user.lastName + ' (' + user.mobile + ') ' + user.email ?  user.email :  ' ',
             'pushToken': user.pushToken
           });
         }

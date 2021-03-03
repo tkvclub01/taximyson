@@ -15,6 +15,7 @@ export default function RegistrationPage(props) {
   const [loading, setLoading] = useState(false);
   const cars = useSelector(state => state.cartypes.cars);
   const [carTypes, setCarTypes] = useState(null);
+  const [commonAlert, setCommonAlert] = useState({ open: false, msg: '' });
   useEffect(() => {
     if (cars) {
       let arr = [];
@@ -59,7 +60,9 @@ export default function RegistrationPage(props) {
             Alert.alert(language.alert,language.referer_not_found)
           });
         } else {
+          console.log(regData);
           emailSignUp(regData).then((res)=>{
+            console.log(res);
             setLoading(false);
             if(res.uid){
               Alert.alert(language.alert,language.account_create_successfully);
