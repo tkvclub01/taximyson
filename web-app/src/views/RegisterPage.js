@@ -109,7 +109,7 @@ export default function LoginPage(props) {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     if (state.firstName.length > 0 && state.lastName.length > 0) {
       //if (re.test(state.email)) {
-       // if (validatePassword('any')) {
+       if (validatePassword('any')) {
           if (validateMobile()) {
             checkUserExists(state).then((res) => {
               if (res.users && res.users.length > 0) {
@@ -155,7 +155,7 @@ export default function LoginPage(props) {
           } else {
             setCommonAlert({ open: true, msg: language.mobile_no_blank_error });
           }
-       // }
+       }
      /* } else {
         setCommonAlert({ open: true, msg: language.proper_email });
       }*/

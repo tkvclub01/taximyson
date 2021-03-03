@@ -61,7 +61,8 @@ export default function EditProfilePage(props) {
                 firstName: profileData.firstName,
                 lastName: profileData.lastName,
                 mobile: profileData.mobile,
-                email: profileData.email
+                email: profileData.email,
+                password: profileData.password ? profileData.password : null
             }
             dispatch(updateProfile(auth.info, userData));
             Alert.alert(language.alert,language.profile_updated);
@@ -129,6 +130,27 @@ export default function EditProfilePage(props) {
                                 errorStyle={styles.errorMessageStyle}
                                 inputContainerStyle={styles.inputContainerStyle}
                                 containerStyle={styles.textInputStyle}
+                            />
+                        </View>
+                        <View style={styles.textInputContainerStyle}>
+                            <Icon
+                                name='lock'
+                                type='font-awesome'
+                                color={colors.GREY.secondary}
+                                size={30}
+                                containerStyle={styles.iconContainer}
+                            />
+                            <Input
+                                editable={true}
+                                underlineColorAndroid={colors.TRANSPARENT}
+                                placeholder={language.password_placeholder}
+                                placeholderTextColor={colors.GREY.secondary}
+                                value={profileData && profileData.password? profileData.password: ''}
+                                inputStyle={styles.inputTextStyle}
+                                onChangeText={(text) => { setProfileData({...profileData, password: text}) }}
+                                inputContainerStyle={styles.inputContainerStyle}
+                                containerStyle={styles.textInputStyle}
+                                secureTextEntry={true}
                             />
                         </View>
                        {/* <View style={styles.textInputContainerStyle}>

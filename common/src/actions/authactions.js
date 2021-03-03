@@ -511,7 +511,8 @@ export const deleteUser = (uid) => (dispatch) => (firebase) => {
 export const updateProfile = (userAuthData, updateData) => (dispatch) => (firebase) => {
 
   const {
-    singleUserRef,
+    auth,
+    singleUserRef
   } = firebase;
 
   let profile = userAuthData.profile;
@@ -521,6 +522,14 @@ export const updateProfile = (userAuthData, updateData) => (dispatch) => (fireba
     payload: profile
   });
   singleUserRef(userAuthData.uid).update(updateData);
+  if(profile.password && profile.password.length > 1){
+    var user = auth.currentUser;
+    user.updatePassword(profile.password).then(function() {
+
+    }).catch(function(error) {
+      // An error happened.
+    });
+  }
 };
 
 

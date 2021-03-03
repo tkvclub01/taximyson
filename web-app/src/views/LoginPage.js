@@ -151,8 +151,10 @@ export default function LoginPage(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     //eslint-disable-next-line
-    if (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(data.email) && data.pass.length > 0) {
-      dispatch(signIn(data.email, data.pass));
+    //if (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(data.email) && data.pass.length > 0) {
+    if(data.phone.length > 8 && data.pass.length > 0){
+      let email = '+84' + data.phone + '@etoviet.vn';
+      dispatch(signIn(email, data.pass));
     } else {
       setCommonAlert({ open: true, msg: language.login_validate_error})
     }
@@ -279,33 +281,33 @@ export default function LoginPage(props) {
                       textColor="inherit"
                       aria-label="switch login type"
                     >
-                      <Tab disabled={tabDisabled} icon={<EmailIcon />} label={language.email_tab}  aria-label="email" />
+                      <Tab disabled={tabDisabled} icon={<PhoneIcon />} label={language.login}  aria-label="Phone" />
                       {features.MobileLoginEnabled?
-                      <Tab disabled={tabDisabled} icon={<PhoneIcon />} label={language.phone_tab} aria-label="phone" />
+                      <Tab disabled={tabDisabled} icon={<PhoneIcon />} label={language.login_otp} aria-label="Phone OTP" />
                       :null}
                     </Tabs>
                   </Paper>
 
                   <CardBody>
-                    {loginType === 0 ?    //EMAIL
-                      <CustomInput
-                        labelText={language.email}
-                        id="email"
-                        formControlProps={{
-                          fullWidth: true
-                        }}
-                        inputProps={{
-                          type: "email",
-                          required: true,
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <Email className={classes.inputIconsColor} />
-                            </InputAdornment>
-                          )
-                        }}
-                        onChange={onInputChange}
-                        value={data.email}
-                      />
+                    {loginType === 0 ?
+                        <CustomInput
+                            labelText={language.phone}
+                            id="mobile"
+                            formControlProps={{
+                              fullWidth: true
+                            }}
+                            inputProps={{
+                              required: true,
+                              disabled: data.verificationId ? true : false,
+                              endAdornment: (
+                                  <InputAdornment position="end">
+                                    <PhoneIcon className={classes.inputIconsColor} />
+                                  </InputAdornment>
+                              )
+                            }}
+                            onChange={onInputChange}
+                            value={data.mobile}
+                        />
                       : null}
                     {loginType === 0?
                       <CustomInput
@@ -381,7 +383,7 @@ export default function LoginPage(props) {
                         value={data.otp}
                       />
                       : null}
-                    {loginType === 0 ?  
+                    {/*{loginType === 0 ?
                       <RegularButton 
                         color="inherit" 
                         onClick={handleForgotPass}
@@ -393,7 +395,7 @@ export default function LoginPage(props) {
                       >
                           {language.forgot_password}
                       </RegularButton>
-                    : null}
+                    : null}*/}
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
                     {loginType === 0 ?

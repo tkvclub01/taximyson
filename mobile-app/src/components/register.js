@@ -471,6 +471,46 @@ export default function Registration(props) {
                         </View>
                         <View style={styles.textInputContainerStyle}>
                             <Icon
+                                name='lock'
+                                type='font-awesome'
+                                color={colors.WHITE}
+                                size={24}
+                                containerStyle={styles.iconContainer}
+                            />
+                            <Input
+                                underlineColorAndroid={colors.TRANSPARENT}
+                                placeholder={language.password_placeholder}
+                                placeholderTextColor={colors.WHITE}
+                                value={state.password}
+                                inputStyle={styles.inputTextStyle}
+                                onChangeText={(text) => setState({...state, password: text})}
+                                inputContainerStyle={styles.inputContainerStyle}
+                                containerStyle={styles.textInputStyle}
+                                secureTextEntry={true}
+                            />
+                        </View>
+                        <View style={styles.textInputContainerStyle}>
+                            <Icon
+                                name='lock'
+                                type='font-awesome'
+                                color={colors.WHITE}
+                                size={24}
+                                containerStyle={styles.iconContainer}
+                            />
+                            <Input
+                                underlineColorAndroid={colors.TRANSPARENT}
+                                placeholder={language.confrim_password_placeholder}
+                                placeholderTextColor={colors.WHITE}
+                                value={confirmpassword}
+                                inputStyle={styles.inputTextStyle}
+                                onChangeText={(text) => setConfirmPassword(text)}
+                                inputContainerStyle={styles.inputContainerStyle}
+                                containerStyle={styles.textInputStyle}
+                                secureTextEntry={true}
+                            />
+                        </View>
+                        <View style={styles.textInputContainerStyle}>
+                            <Icon
                                 name='user'
                                 type='font-awesome'
                                 color={colors.WHITE}

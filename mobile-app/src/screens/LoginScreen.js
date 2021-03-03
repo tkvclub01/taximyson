@@ -63,6 +63,7 @@ export default function EmailLoginScreen(props) {
     });
 
     const emailInput = useRef(null);
+    const mobileInput = useRef(null);
     const passInput = useRef(null);
     const pageActive = useRef(false);
     const [loading, setLoading] = useState(false);
@@ -148,17 +149,18 @@ export default function EmailLoginScreen(props) {
 
     onAction = async () => {
         setLoading(true);
-        const {email, password} = state;
-        if (validateEmail(email)) {
+        const {phoneNumber, password} = state;
+        if (phoneNumber.length > 8) {
             if (password != '') {
                 pageActive.current = true;
+                let email = '+84' + phoneNumber + '@etoviet.vn';
                 dispatch(signIn(email, password));
                 setState({
                     ...state,
-                    email: '',
+                    phoneNumber: '',
                     password: ''
                 });
-                emailInput.current.focus();
+                phoneNumber.current.focus();
             } else {
                 passInput.current.focus();
                 setLoading(false);
@@ -224,7 +226,7 @@ export default function EmailLoginScreen(props) {
                     <Image source={require('../../assets/images/logo165x90white.png')}/>
                 </View>
                 <SegmentedControlTab
-                    values={[language.login]}
+                    values={[language.login, language.login_otp]}
                     selectedIndex={state.customStyleIndex}
                     onTabPress={handleCustomIndexSelect}
                     borderRadius={0}
@@ -245,6 +247,43 @@ export default function EmailLoginScreen(props) {
                 />
                 {state.customStyleIndex == 0 ?
                     <View style={styles.box1}>
+                        <TextInput
+                            style={styles.textInput}
+                            placeholder={language.mobile_no_placeholder}
+                            onChangeText={(value) => setState({...state, phoneNumber: value})}
+                            value={state.phoneNumber}
+                            editable={!!state.verificationId ? false : true}
+                            keyboardType="phone-pad"
+                        />
+                    </View>
+                    : null}
+                {state.customStyleIndex == 0 ?
+                    <View style={styles.box2}>
+                        <TextInput
+                            ref={passInput}
+                            style={styles.textInput}
+                            placeholder={language.password_placeholder}
+                            onChangeText={(value) => setState({...state, password: value})}
+                            value={state.password}
+                            secureTextEntry={true}
+                        />
+                    </View>
+                    : null}
+                {state.customStyleIndex == 0 ?
+                    <MaterialButtonDark
+                        onPress={onAction}
+                        style={styles.materialButtonDark}
+                    >{language.login_button}</MaterialButtonDark>
+                    : null}
+                {/*{state.customStyleIndex == 0 ?
+                    <View style={styles.linkBar}>
+                        <TouchableOpacity style={styles.barLinks} onPress={() => Forgot_Password(state.email)}>
+                            <Text style={styles.linkText}>{language.forgot_password_link}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    : null}*/}
+                {state.customStyleIndex != 0 ?
+                    <View style={styles.box1}>
                         <RNPickerSelect
                             placeholder={{label: language.select_country, value: language.select_country}}
                             value={state.countryCode}
@@ -252,7 +291,6 @@ export default function EmailLoginScreen(props) {
                             style={{
                                 inputIOS: styles.pickerStyle,
                                 inputAndroid: styles.pickerStyle,
-
                             }}
                             onValueChange={(value) => setState({...state, countryCode: value})}
                             items={state.countryCodeList}
@@ -260,7 +298,7 @@ export default function EmailLoginScreen(props) {
                         />
                     </View>
                     : null}
-                {state.customStyleIndex == 0 ?
+                {state.customStyleIndex != 0 ?
                     <View style={styles.box2}>
                         <TextInput
                             style={styles.textInput}
@@ -272,13 +310,13 @@ export default function EmailLoginScreen(props) {
                         />
                     </View>
                     : null}
-                {state.customStyleIndex == 0 ? state.verificationId ? null :
+                {state.customStyleIndex != 0 ? state.verificationId ? null :
                     <MaterialButtonDark
                         onPress={onPressLogin}
                         style={styles.materialButtonDark}
                     >{language.request_otp}</MaterialButtonDark>
                     : null}
-                {state.customStyleIndex == 0 && !!state.verificationId ?
+                {state.customStyleIndex != 0 && !!state.verificationId ?
                     <View style={styles.box2}>
                         <TextInput
                             style={styles.textInput}
@@ -291,7 +329,7 @@ export default function EmailLoginScreen(props) {
                         />
                     </View>
                     : null}
-                {state.customStyleIndex == 0 && !!state.verificationId ?
+                {state.customStyleIndex != 0 && !!state.verificationId ?
                     <MaterialButtonDark
                         onPress={onSignIn}
                         style={styles.materialButtonDark}
