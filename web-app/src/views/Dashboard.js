@@ -55,7 +55,7 @@ const Dashboard = () => {
                         id:i,
                         lat:drivers[i].location.lat,
                         lng:drivers[i].location.lng,
-                        drivername:drivers[i].firstName + ' ' + drivers[i].lastName
+                        drivername:drivers[i].codeDriver
                     });
                 }
             }

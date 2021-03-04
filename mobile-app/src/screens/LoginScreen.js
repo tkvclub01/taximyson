@@ -152,15 +152,29 @@ export default function EmailLoginScreen(props) {
         const {phoneNumber, password} = state;
         if (phoneNumber.length > 8) {
             if (password != '') {
-                pageActive.current = true;
-                let email = '+84' + phoneNumber + '@etoviet.vn';
-                dispatch(signIn(email, password));
-                setState({
-                    ...state,
-                    phoneNumber: '',
-                    password: ''
+                let formattedNum = phoneNumber.replace(/ /g, '');
+                formattedNum = '+84' + formattedNum.replace(/-/g, '');
+                checkUserExists({mobile: formattedNum}).then((res) => {
+                    if (res.users && res.users.length > 0) {
+                        if(res.users[0].disabled == true){
+                            setLoading(false);
+                            Alert.alert(language.alert, language.user_does_disable);
+                        }else{
+                            pageActive.current = true;
+                            let email = res.users[0].email;
+                            dispatch(signIn(email, password));
+                            setState({
+                                ...state,
+                                phoneNumber: '',
+                                password: ''
+                            });
+                            phoneNumber.current.focus();
+                        }
+                    } else {
+                        setLoading(false);
+                        Alert.alert(language.alert, language.user_does_not_exists);
+                    }
                 });
-                phoneNumber.current.focus();
             } else {
                 passInput.current.focus();
                 setLoading(false);

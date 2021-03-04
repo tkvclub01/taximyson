@@ -505,7 +505,7 @@ exports.user_signup = functions.https.onRequest(async (request, response) => {
             regData.cmnd = userDetails.cmnd;
             regData.cmndS = userDetails.cmndS;
             regData.anhBienSoXe = userDetails.anhBienSoXe;
-            regData.codeDriver = userDetails.mobile;
+            regData.codeDriver = ' ';
             regData.queue = false;
             regData.driverActiveStatus = true;
             if (settings.driver_approval) {
