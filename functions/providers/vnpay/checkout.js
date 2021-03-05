@@ -25,7 +25,6 @@ module.exports.render_checkout = async function (request, response) {
         orderType: 'topup',
         amount: parseInt(amount, 10)
     });
-    console.log('payURL', payURL);
     /*
 
         let refundURL = await vnpay.genRefundURL({
@@ -87,8 +86,6 @@ module.exports.process_checkout = async function (request, response) {
     if (responseData.vnp_ResponseCode !== '00') {
         response.redirect('/cancel');
     }
-
-    console.log('response ', responseData);
 
     if (vnpay.checkVNPayResponse(responseData)) {
         response.redirect(`/success?amount=${request.query.vnp_Amount}&transaction_id=${request.query.vnp_TransactionNo}&order_id=${request.query.vnp_TxnRef}`);

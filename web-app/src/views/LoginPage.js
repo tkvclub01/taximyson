@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Icon from "@material-ui/core/Icon";
-import Email from "@material-ui/icons/Email";
 import Header from "components/Header/Header.js";
 import HeaderLinks from "components/Header/HeaderLinks.js";
 import Footer from "components/Footer/Footer.js";
@@ -21,7 +20,6 @@ import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PhoneIcon from '@material-ui/icons/Phone';
-import EmailIcon from '@material-ui/icons/Email';
 import AlertDialog from '../components/AlertDialog';
 import CountrySelect from '../components/CountrySelect';
 import TextField from '@material-ui/core/TextField';
@@ -30,7 +28,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {Button as RegularButton} from "@material-ui/core";
 import {
   language,
   default_country_code,
@@ -152,13 +149,32 @@ export default function LoginPage(props) {
     e.preventDefault();
     //eslint-disable-next-line
     //if (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(data.email) && data.pass.length > 0) {
-    if(data.phone.length > 8 && data.pass.length > 0){
-      let email = '+84' + data.phone + '@etoviet.vn';
+    if(data.mobile.length > 8 && data.pass.length > 0){
+      let formattedNum = data.mobile.replace(/ /g, '');
+      formattedNum = data.mobile + formattedNum.replace(/-/g, '');
+      let phoneNumber = '+84' + formattedNum;
+      if(data.country){
+        phoneNumber = data.country + formattedNum;
+      }
+      console.log(phoneNumber);
+      let email = '';
+      if(data.mobile.includes('@')){
+        email = data.mobile;
+      }else{
+        checkUserExists({mobile: phoneNumber}).then((res) => {
+          console.log(res);
+          if (res.users[0].disabled == true) {
+            setCommonAlert({ open: true, msg: language.user_does_disable})
+          } else {
+            email = res.users[0].email;
+          }
+        });
+      }
       dispatch(signIn(email, data.pass));
     } else {
       setCommonAlert({ open: true, msg: language.login_validate_error})
     }
-    setData({...data,email:'',pass:''});
+    setData({...data, email:'',pass:''});
   }
 
   const handleGetOTP = (e) => {

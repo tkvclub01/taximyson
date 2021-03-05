@@ -63,12 +63,10 @@ export default function EmailLoginScreen(props) {
     });
 
     const emailInput = useRef(null);
-    const mobileInput = useRef(null);
     const passInput = useRef(null);
     const pageActive = useRef(false);
     const [loading, setLoading] = useState(false);
     const recaptchaVerifier = useRef(null);
-
     useEffect(() => {
         if (auth.info && pageActive.current) {
             pageActive.current = false;
@@ -211,7 +209,7 @@ export default function EmailLoginScreen(props) {
         setState({...state, customStyleIndex: index});
     };
     const goBack = () => {
-        props.navigation.goBack();
+        props.navigation.goBack(null);
     }
     return (
         <View style={styles.containerView}>
@@ -234,7 +232,7 @@ export default function EmailLoginScreen(props) {
                 <FirebaseRecaptchaVerifierModal
                     ref={recaptchaVerifier}
                     firebaseConfig={FirebaseConfig}
-                    attemptInvisibleVerification={true}
+                    attemptInvisibleVerification={false}
                 />
                 <View style={styles.logo}>
                     <Image source={require('../../assets/images/logo165x90white.png')}/>

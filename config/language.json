@@ -70,6 +70,7 @@
     "email_tab": "Đăng nhập Email",
     "phone_tab": "Đăng nhập Điện thoại",
     "booking_date_time": "Thời gian Dữ liệu Đặt xe",
+    "login_success": "Đăng nhập thành công",
     "past_booking_error": "Không thể sử dụng Chuyến đi Sau cho Ngày trước hoặc trong vòng 15 phút tới.",
     "settings_error": "Không thể tìm nạp cài đặt.",
     "estimate": "Ước tính Giá vé",
