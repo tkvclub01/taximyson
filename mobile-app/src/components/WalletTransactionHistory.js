@@ -4,7 +4,7 @@ import { Icon } from 'react-native-elements'
 import { colors } from '../common/theme';
 import  { language, dateStyle }  from 'config';
 import { useSelector } from 'react-redux';
-
+import {formatNumber} from 'react-native-currency-input';
 export default function  WTransactionHistory(props) {
 
     const [data,setData] = useState(null);
@@ -23,6 +23,14 @@ export default function  WTransactionHistory(props) {
         wallHis.length>0?setData(wallHis.reverse()):setData([]);
     },[props.walletHistory]);
 
+    const formatPrice = (value) => {
+        return formatNumber(value, {
+            separator: ',',
+            precision: 0,
+            delimiter: '.',
+            ignoreNegative: false,
+        }) + ' ' + settings.symbol;
+    }
     const newData = ({ item }) => {
         return (
             <View style={styles.container}>
@@ -65,13 +73,13 @@ export default function  WTransactionHistory(props) {
                             :null}
                             <View style={styles.statusView}>
                             {item.type  && item.type == 'Credit'?
-                                <Text style={styles.historyamounttextStyle}>{language.credited + ' ' +  parseFloat(item.amount).toFixed(0) + ' ' + settings.symbol}</Text>
+                                <Text style={styles.historyamounttextStyle}>{language.credited + ' ' +  formatPrice(item.amount)}</Text>
                             :null}
                             {item.type && item.type == 'Debit'?
-                                <Text style={styles.historyamounttextStyle}>{language.debited + ' ' + parseFloat(item.amount).toFixed(0) + ' ' + settings.symbol} </Text>
+                                <Text style={styles.historyamounttextStyle}>{language.debited + ' ' + formatPrice(item.amount)} </Text>
                             :null}
                             {item.type && item.type == 'Withdraw'?
-                                <Text style={styles.historyamounttextStyle}>{language.withdrawn + ' '  + parseFloat(item.amount).toFixed(0) + ' ' + settings.symbol}</Text>
+                                <Text style={styles.historyamounttextStyle}>{language.withdrawn + ' '  + formatPrice(item.amount)}</Text>
                             :null}
                             <Text style={styles.textStyle}>{language.Transaction_Id} {item.txRef}</Text>
                             <Text style={styles.textStyle2}>{item.date}</Text>

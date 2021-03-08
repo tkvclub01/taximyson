@@ -113,6 +113,7 @@ export default function IntroScreen(props) {
         Linking.openURL(settings.CompanyTerms).catch(err => console.error("Couldn't load page", err));
     }
 
+
     return (
         <ImageBackground
             source={require('../../assets/images/bg.jpg')}
@@ -125,43 +126,43 @@ export default function IntroScreen(props) {
                 style={styles.materialButtonDark}
             >{language.login}</MaterialButtonDark>
             {features.MobileLoginEnabled?
-            <MaterialButtonDark
-                onPress={onPressRegister}
-                style={styles.materialButtonDark2}
-            >{language.register}</MaterialButtonDark>
-            :null}
+                <MaterialButtonDark
+                    onPress={onPressRegister}
+                    style={styles.materialButtonDark2}
+                >{language.register}</MaterialButtonDark>
+                :null}
             {(Platform.OS == 'ios' && features.AppleLoginEnabled) || features.FacebookLoginEnabled?
-            <View style={styles.seperator}>
-                <View style={styles.lineLeft}></View>
-                <View style={styles.lineLeftFiller}>
-                    <Text style={styles.sepText}>{language.spacer_message}</Text>
+                <View style={styles.seperator}>
+                    <View style={styles.lineLeft}></View>
+                    <View style={styles.lineLeftFiller}>
+                        <Text style={styles.sepText}>{language.spacer_message}</Text>
+                    </View>
+                    <View style={styles.lineRight}></View>
                 </View>
-                <View style={styles.lineRight}></View>
-            </View>
-            :null}
+                :null}
 
             {(Platform.OS == 'ios' && features.AppleLoginEnabled) || features.FacebookLoginEnabled?
-            <View style={styles.socialBar}>
-                {features.FacebookLoginEnabled?
-                <TouchableOpacity style={styles.socialIcon} onPress={FbLogin}>
-                    <Image
-                        source={require("../../assets/images/image_fb.png")}
-                        resizeMode="contain"
-                        style={styles.socialIconImage}
-                    ></Image>
-                </TouchableOpacity>
+                <View style={styles.socialBar}>
+                    {features.FacebookLoginEnabled?
+                        <TouchableOpacity style={styles.socialIcon} onPress={FbLogin}>
+                            <Image
+                                source={require("../../assets/images/image_fb.png")}
+                                resizeMode="contain"
+                                style={styles.socialIconImage}
+                            ></Image>
+                        </TouchableOpacity>
+                        :null}
+                    {Platform.OS == 'ios' && features.AppleLoginEnabled?
+                        <TouchableOpacity style={styles.socialIcon} onPress={AppleLogin}>
+                            <Image
+                                source={require("../../assets/images/image_apple.png")}
+                                resizeMode="contain"
+                                style={styles.socialIconImage}
+                            ></Image>
+                        </TouchableOpacity>
+                        : null}
+                </View>
                 :null}
-                {Platform.OS == 'ios' && features.AppleLoginEnabled?
-                    <TouchableOpacity style={styles.socialIcon} onPress={AppleLogin}>
-                        <Image
-                            source={require("../../assets/images/image_apple.png")}
-                            resizeMode="contain"
-                            style={styles.socialIconImage}
-                        ></Image>
-                    </TouchableOpacity>
-                : null}
-            </View>
-            :null}
             <View>
                 <TouchableOpacity style={styles.terms} onPress={openTerms}>
                     <Text style={styles.actionText}>{language.terms}</Text>

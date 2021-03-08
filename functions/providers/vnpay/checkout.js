@@ -1,8 +1,5 @@
 const templateLib = require('./template');
 const VNPay = require('node-vnpay');
-const assert = require('assert');
-const extIP = require('external-ip')();
-
 
 var merchantCode = 'OKF0MVOR';
 var secretKey = 'BPGOKBBUDOHTLKEEMIAPVKSZMNNFDQRW';
@@ -12,7 +9,7 @@ module.exports.render_checkout = async function (request, response) {
     var process_checkout = full_url + "/vnpay-process";
     var amount = request.body.amount;
     var order_id = request.body.order_id;
-    var order_info = request.body.product_name;
+    var order_info = request.body.description;
     let vnpay = new VNPay({
         secretKey: secretKey,
         returnUrl: process_checkout,
@@ -22,7 +19,7 @@ module.exports.render_checkout = async function (request, response) {
     let payURL = await vnpay.genPayURL({
         transactionRef: order_id,
         orderInfo: order_info,
-        orderType: 'topup',
+        orderType: 'pay',
         amount: parseInt(amount, 10)
     });
     /*

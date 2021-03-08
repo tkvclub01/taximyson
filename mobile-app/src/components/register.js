@@ -369,7 +369,7 @@ export default function Registration(props) {
                 leftComponent={{
                     icon: 'ios-arrow-back',
                     type: 'ionicon',
-                    color: colors.WHITE,
+                    color: colors.DARK,
                     size: 35,
                     component: TouchableWithoutFeedback,
                     onPress: props.onPressBack

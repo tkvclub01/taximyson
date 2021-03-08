@@ -19,7 +19,7 @@ import { language } from 'config';
 import { makeStyles } from '@material-ui/core/styles';
 import UsersCombo from '../components/UsersCombo';
 import { FirebaseContext } from 'common';
-
+import {formatNumber} from 'react-native-currency-input';
 const useStyles = makeStyles(theme => ({
   root: {
     '& > *': {
@@ -90,7 +90,15 @@ export default function AddBookings(props) {
   const [userCombo, setUserCombo] = useState(null);
   const [estimateRequested, setEstimateRequested] = useState(false);
   const [bookingType, setBookingType] = useState('Book Now');
+  const formatPrice = (value) => {
 
+    return formatNumber(value, {
+      separator: ',',
+      precision: 0,
+      delimiter: '.',
+      ignoreNegative: false,
+    }) + ' ' + settings.symbol;
+  }
   const getDateString = (date) => {
     let d = null;
     d = date ? new Date(date) : new Date();
@@ -393,7 +401,7 @@ export default function AddBookings(props) {
         <DialogTitle id="alert-dialog-title">{language.estimate}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {settings?settings.symbol:null} {estimatedata.estimate ? estimatedata.estimate.estimateFare : null}
+            {estimatedata.estimate ? estimatedata.estimate.estimateFare : null}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -25,7 +25,6 @@ export default function PaymentWebView(props) {
       props.onCancel();
     }
   };
-
   return (
     <WebView
       originWhitelist={['*']}
@@ -37,9 +36,11 @@ export default function PaymentWebView(props) {
           + '&amount=' + props.payData.amount
           + '&currency=' + props.payData.currency
           + '&product_name=' + props.payData.product_name
+          + '&description=' + props.payData.description
           + '&quantity=' + props.payData.quantity
           + '&cust_id=' + props.payData.cust_id
           + '&mobile_no=' + props.payData.mobile_no
+          + '&mobile=' + props.payData.mobile
           + '&email=' + (props.payData.email) ? props.payData.email : ''
       }}
       onLoadStart={onLoadStart}

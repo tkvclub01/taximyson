@@ -60,9 +60,7 @@ export default function RegistrationPage(props) {
             Alert.alert(language.alert,language.referer_not_found)
           });
         } else {
-          console.log(regData);
           emailSignUp(regData).then((res)=>{
-            console.log(res);
             setLoading(false);
             if(res.uid){
               Alert.alert(language.alert,language.account_create_successfully);

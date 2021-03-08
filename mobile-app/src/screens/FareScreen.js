@@ -16,7 +16,7 @@ var { width, height } = Dimensions.get('window');
 import { useSelector, useDispatch } from 'react-redux';
 import { language } from 'config';
 import { FirebaseContext } from 'common/src';
-
+import {formatNumber} from "react-native-currency-input";
 export default function FareScreen(props) {
     const { api } = useContext(FirebaseContext);
     const {
@@ -35,7 +35,14 @@ export default function FareScreen(props) {
     const mapRef = useRef(null);
 
     const [buttonDisabled, setButtonDisabled] = useState(false);
-
+    const formatPrice = (value) => {
+        return formatNumber(value, {
+            separator: ',',
+            precision: 0,
+            delimiter: '.',
+            ignoreNegative: false,
+        }) + ' ' + settings.symbol;
+    }
     const onPressCancel = () => {
         setButtonDisabled(false);
         props.navigation.goBack();
@@ -184,7 +191,7 @@ export default function FareScreen(props) {
                         </View>
 
                         <View style={styles.iconContainer}>
-                            <Text style={styles.priceText}> {settings ? settings.symbol : null} {estimate ? estimate.estimateFare : null}</Text>
+                            <Text style={styles.priceText}> {estimate ? formatPrice(estimate.estimateFare) : null}</Text>
                         </View>
 
                     </View>

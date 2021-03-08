@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { Icon } from 'react-native-elements'
-import { colors } from '../common/theme';
-import { language, dateStyle } from 'config';
-import { useSelector } from 'react-redux';
+import {View, Text, FlatList, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {Icon} from 'react-native-elements'
+import {colors} from '../common/theme';
+import {language, dateStyle} from 'config';
+import {useSelector} from 'react-redux';
+import {formatNumber} from 'react-native-currency-input';
 
 export default function RideList(props) {
 
@@ -13,7 +14,15 @@ export default function RideList(props) {
         props.onPressButton(item, index)
     }
 
-    const renderData = ({ item, index }) => {
+    const formatPrice = (value) => {
+        return formatNumber(value, {
+            separator: ',',
+            precision: 0,
+            delimiter: '.',
+            ignoreNegative: false,
+        }) + ' ' + settings.symbol;
+    }
+    const renderData = ({item, index}) => {
         return (
             <TouchableOpacity style={styles.iconClickStyle} onPress={() => onPressButton(item, index)}>
                 <View style={styles.iconViewStyle}>
@@ -27,22 +36,28 @@ export default function RideList(props) {
                 <View style={styles.flexViewStyle}>
                     <View style={styles.textView1}>
 
-                        <Text style={[styles.textStyle, styles.dateStyle]}>{item.bookingDate ? new Date(item.bookingDate).toLocaleString(dateStyle) : ''}</Text>
-                        <Text style={[styles.textStyle, styles.carNoStyle]}>{item.carType ? item.carType : null} - {item.vehicle_number ? item.vehicle_number : language.no_car_assign_text}</Text>
+                        <Text
+                            style={[styles.textStyle, styles.dateStyle]}>{item.bookingDate ? new Date(item.bookingDate).toLocaleString(dateStyle) : ''}</Text>
+                        <Text
+                            style={[styles.textStyle, styles.carNoStyle]}>{item.carType ? item.carType : null} - {item.vehicle_number ? item.vehicle_number : language.no_car_assign_text}</Text>
                         <View style={[styles.picupStyle, styles.position]}>
 
-                            <View style={styles.greenDot} />
-                            <Text style={[styles.picPlaceStyle, styles.placeStyle]}>{item.pickup ? item.pickup.add : language.not_found_text}</Text>
+                            <View style={styles.greenDot}/>
+                            <Text
+                                style={[styles.picPlaceStyle, styles.placeStyle]}>{item.pickup ? item.pickup.add : language.not_found_text}</Text>
                         </View>
                         <View style={[styles.dropStyle, styles.textViewStyle]}>
-                            <View style={[styles.redDot, styles.textPosition]} />
-                            <Text style={[styles.dropPlaceStyle, styles.placeStyle]}>{item.drop ? item.drop.add : language.not_found_text}</Text>
+                            <View style={[styles.redDot, styles.textPosition]}/>
+                            <Text
+                                style={[styles.dropPlaceStyle, styles.placeStyle]}>{item.drop ? item.drop.add : language.not_found_text}</Text>
                         </View>
 
                     </View>
                     <View style={styles.textView2}>
-                        <Text style={[styles.fareStyle, styles.dateStyle]}>{item.status == 'NEW' ? language[item.status] : null}</Text>
-                        <Text style={[styles.fareStyle, styles.dateStyle]}>{item.status == 'PAID' || item.status == 'COMPLETE'? item.customer_paid ? parseFloat(item.customer_paid).toFixed(2) + settings.symbol : parseFloat(item.estimate).toFixed(2) + settings.symbol : null}</Text>
+                        <Text
+                            style={[styles.fareStyle, styles.dateStyle]}>{item.status == 'NEW' ? language[item.status] : null}</Text>
+                        <Text
+                            style={[styles.fareStyle, styles.dateStyle]}>{item.status == 'PAID' || item.status == 'COMPLETE' ? item.customer_paid ? formatPrice(item.customer_paid) : formatPrice(item.estimate) : null}</Text>
                         {
                             item.status == 'CANCELLED' ?
                                 <Image

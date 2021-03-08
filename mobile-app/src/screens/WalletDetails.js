@@ -1,5 +1,6 @@
 import React from 'react';
 import {WTransactionHistory} from '../components';
+import {formatNumber} from 'react-native-currency-input';
 import {
     StyleSheet,
     View,
@@ -21,6 +22,15 @@ export default function WalletDetails(props) {
     const auth = useSelector(state => state.auth);
     const settings = useSelector(state => state.settingsdata.settings);
     const providers = useSelector(state => state.paymentmethods.providers);
+
+    const formatPrice = (value) => {
+        return formatNumber(value, {
+            separator: ',',
+            precision: 0,
+            delimiter: '.',
+            ignoreNegative: false,
+        }) + ' ' + settings.symbol;
+    }
 
     const doReacharge = () => {
         if (providers) {
@@ -78,7 +88,7 @@ export default function WalletDetails(props) {
                                     fontSize: 25,
                                     fontWeight: '500',
                                     color: colors.GREEN.medium
-                                }}>{auth.info && auth.info.profile ? parseFloat(auth.info.profile.walletBalance).toFixed(0) : ''}{settings.symbol}</Text>
+                                }}>{auth.info && auth.info.profile ? formatPrice(auth.info.profile.walletBalance) : ''}</Text>
                             </View>
                             <TouchableWithoutFeedback onPress={doReacharge}>
                                 <View style={{
