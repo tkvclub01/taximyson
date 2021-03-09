@@ -17,6 +17,7 @@ import { PromoComp } from "../components";
 import { language } from 'config';
 import { useSelector,useDispatch } from 'react-redux';
 import { FirebaseContext } from 'common/src';
+import {formatNumber} from "react-native-currency-input";
 
 export default function PaymentDetails(props) {
   const { api } = useContext(FirebaseContext);
@@ -33,6 +34,15 @@ export default function PaymentDetails(props) {
 
   const [promodalVisible, setPromodalVisible] = useState(false);
   const [useWalletCash, setUseWalletCash] = useState(false);
+
+  const formatPrice = (value) => {
+    return formatNumber(value, {
+      separator: ',',
+      precision: 0,
+      delimiter: '.',
+      ignoreNegative: false,
+    }) + ' ' + settings.symbol;
+  }
 
   const [payDetails, setPayDetails] = useState({
     amount: booking.trip_cost,
@@ -354,22 +364,22 @@ export default function PaymentDetails(props) {
           {userdata && userdata.usertype == 'rider' ?
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 25, paddingRight: 25 }}>
               <Text style={{ color: colors.BLACK, textAlign: 'left', lineHeight: 45, fontSize: 16 }}>{language.your_fare}</Text>
-              <Text style={{ color: colors.BLACK, textAlign: 'left', lineHeight: 45, fontSize: 16 }}>{parseFloat(payDetails.amount).toFixed(2)} {settings.symbol} </Text>
+              <Text style={{ color: colors.BLACK, textAlign: 'left', lineHeight: 45, fontSize: 16 }}>{formatPrice(payDetails.amount)} </Text>
             </View>
             : <View style={{ flex: 1, justifyContent: 'center', padding: 25 }}>
-              <Text style={{ color: 'green', textAlign: 'center', lineHeight: 60, fontSize: 60, fontWeight: 'bold' }}>{parseFloat(payDetails.amount).toFixed(2)} {settings.symbol} </Text>
+              <Text style={{ color: 'green', textAlign: 'center', lineHeight: 60, fontSize: 60, fontWeight: 'bold' }}>{formatPrice(payDetails.amount)} </Text>
             </View>
           }
           {userdata && userdata.usertype == 'rider' ?
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 25, paddingRight: 25 }}>
               <Text style={{ color: colors.BLACK, textAlign: 'left', lineHeight: 45, fontSize: 16 }}>{language.promo_discount}</Text>
-              <Text style={{ color: colors.DULL_RED, textAlign: 'left', lineHeight: 45, fontSize: 16 }}>- {settings.symbol} {payDetails ? payDetails.discount ? parseFloat(payDetails.discount).toFixed(2) : '0.00' : '0.00'}</Text>
+              <Text style={{ color: colors.DULL_RED, textAlign: 'left', lineHeight: 45, fontSize: 16 }}>- {payDetails ? payDetails.discount ? formatPrice(payDetails.discount) : formatPrice(0) : formatPrice(0)}</Text>
             </View>
             : null}
           {useWalletCash ?
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 25, paddingRight: 25 }}>
               <Text style={{ color: colors.BLACK, textAlign: 'left', lineHeight: 45, fontSize: 16 }}>{language.wallet_discount}</Text>
-              <Text style={{ color: colors.DULL_RED, textAlign: 'left', lineHeight: 45, fontSize: 16 }}>- {settings.symbol} {payDetails ? payDetails.usedWalletMoney ? parseFloat(payDetails.usedWalletMoney).toFixed(2) : '0.00' : '0.00'}</Text>
+              <Text style={{ color: colors.DULL_RED, textAlign: 'left', lineHeight: 45, fontSize: 16 }}>- {payDetails ? payDetails.usedWalletMoney ? formatPrice(payDetails.usedWalletMoney) : formatPrice(0) : formatPrice(0)}</Text>
             </View> : null}
 
           {userdata && userdata.usertype == 'rider' ?
@@ -377,7 +387,7 @@ export default function PaymentDetails(props) {
               <CheckBox
                 center
                 disabled={walletBalance > 0 ? false : true}
-                title={language.use_wallet_balance + settings.symbol + parseFloat(walletBalance - payDetails.usedWalletMoney).toFixed(2) + ')'}
+                title={language.use_wallet_balance + formatPrice(walletBalance - payDetails.usedWalletMoney) + ')'}
                 checked={useWalletCash}
                 containerStyle={{ backgroundColor: colors.WHITE, borderWidth: 0, borderColor: colors.WHITE, alignSelf: 'flex-start' }}
                 onPress={() => { useWallet() }}>
@@ -396,7 +406,7 @@ export default function PaymentDetails(props) {
           {userdata && userdata.usertype == 'rider' ?
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 25, paddingRight: 25 }}>
               <Text style={{ color: colors.GREEN.bright, textAlign: 'left', lineHeight: 45, fontSize: 18, fontWeight: '500' }}>{language.payable_ammount}</Text>
-              <Text style={{ color: colors.GREEN.bright, textAlign: 'left', lineHeight: 45, fontSize: 18, fontWeight: '500' }}>{settings.symbol} {payDetails.payableAmmount ? parseFloat(payDetails.payableAmmount).toFixed(2) : 0.00}</Text>
+              <Text style={{ color: colors.GREEN.bright, textAlign: 'left', lineHeight: 45, fontSize: 18, fontWeight: '500' }}>{payDetails.payableAmmount ? formatPrice(payDetails.payableAmmount) : formatPrice(0)}</Text>
             </View>
             : null}
         </View>

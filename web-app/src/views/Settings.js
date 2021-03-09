@@ -58,8 +58,8 @@ const Settings = (props) => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [data, setData] = useState({
-    code: 'USD',
-    symbol: '$',
+    code: 'VND',
+    symbol: 'đ',
     bonus: 0,
     bonusd: 0,
     panic: '',

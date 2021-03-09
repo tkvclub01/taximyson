@@ -17,6 +17,7 @@ var {width} = Dimensions.get('window');
 import {language, dateStyle} from 'config';
 import {useDispatch, useSelector} from 'react-redux';
 import {FirebaseContext} from 'common/src';
+import {formatNumber} from "react-native-currency-input";
 
 export default function DriverRating(props) {
     const {api} = useContext(FirebaseContext);
@@ -30,6 +31,15 @@ export default function DriverRating(props) {
 
     const onStarRatingPress = (rating) => {
         setStarCount(rating);
+    }
+
+    const formatPrice = (value) => {
+        return formatNumber(value, {
+            separator: ',',
+            precision: 0,
+            delimiter: '.',
+            ignoreNegative: false,
+        }) + ' ' + settings.symbol;
     }
 
     const skipRating = () => {
@@ -119,7 +129,7 @@ export default function DriverRating(props) {
 
             <View style={styles.rateViewStyle}>
                 <Text
-                    style={styles.rateViewTextStyle}>{booking ? booking.customer_paid > 0 ? parseFloat(booking.customer_paid).toFixed(0) : 0 : null}{settings.symbol}</Text>
+                    style={styles.rateViewTextStyle}>{booking ? booking.customer_paid > 0 ? formatPrice(booking.customer_paid) : formatPrice(0) : null}</Text>
             </View>
             <View style={styles.addressViewStyle}>
                 <View style={styles.pickUpStyle}>

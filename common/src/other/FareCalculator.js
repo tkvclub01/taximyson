@@ -63,8 +63,8 @@ export function FareCalculator(distance, time, rateDetails) {
     console.log('convenienceFee ' + convenienceFee);
 
     return {
-        totalCost: parseFloat(total.toFixed(2)),
-        grandTotal: parseFloat(grand.toFixed(2)),
-        convenience_fees: parseFloat(convenienceFee.toFixed(2))
+        totalCost: parseFloat(total.toFixed(0)),
+        grandTotal: parseFloat(grand.toFixed(0)),
+        convenience_fees: parseFloat(convenienceFee.toFixed(0))
     }
 }

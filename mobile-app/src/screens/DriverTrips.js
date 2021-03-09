@@ -1,17 +1,29 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { Text, View, StyleSheet, Dimensions, FlatList, Modal, TouchableHighlight, TouchableWithoutFeedback, Switch, Image } from 'react-native';
-import { Button, Header } from 'react-native-elements';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import { colors } from '../common/theme';
-import { language, dateStyle } from 'config';
-import { useDispatch, useSelector } from 'react-redux';
-import { FirebaseContext } from 'common/src';
-import { Alert } from 'react-native';
+import React, {useEffect, useState, useContext} from 'react';
+import {
+    Text,
+    View,
+    StyleSheet,
+    Dimensions,
+    FlatList,
+    Modal,
+    TouchableHighlight,
+    TouchableWithoutFeedback,
+    Switch,
+    Image
+} from 'react-native';
+import {Button, Header} from 'react-native-elements';
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+import {colors} from '../common/theme';
+import {language, dateStyle} from 'config';
+import {useDispatch, useSelector} from 'react-redux';
+import {FirebaseContext} from 'common/src';
+import {Alert} from 'react-native';
+import {formatNumber} from "react-native-currency-input";
 
-var { width, height } = Dimensions.get('window');
+var {width, height} = Dimensions.get('window');
 
 export default function DriverTrips(props) {
-    const { api } = useContext(FirebaseContext);
+    const {api} = useContext(FirebaseContext);
     const {
         acceptTask,
         cancelTask,
@@ -39,6 +51,15 @@ export default function DriverTrips(props) {
         }
     }, [bookinglistdata.bookings])
 
+    const formatPrice = (value) => {
+        return formatNumber(value, {
+            separator: ',',
+            precision: 0,
+            delimiter: '.',
+            ignoreNegative: false,
+        }) + ' ' + settings.symbol;
+    }
+
     const onPressAccept = (item) => {
         console.log("item__");
         console.log(item);
@@ -50,15 +71,15 @@ export default function DriverTrips(props) {
             setSelectedItem(null);
             setModalVisible(null);
             setTimeout(() => {
-                props.navigation.navigate('BookedCab', { bookingId: item.id });
+                props.navigation.navigate('BookedCab', {bookingId: item.id});
             }, 3000)
         } else {
-            if (wallet_balance == 0){
+            if (wallet_balance == 0) {
                 Alert.alert(
                     language.alert,
                     language.wallet_balance_zero
                 );
-            }else{
+            } else {
                 Alert.alert(
                     language.alert,
                     language.wallet_balance_negative
@@ -74,25 +95,38 @@ export default function DriverTrips(props) {
     };
 
     const goToBooking = (id) => {
-        props.navigation.navigate('BookedCab', { bookingId: id });
+        props.navigation.navigate('BookedCab', {bookingId: id});
     };
 
     const onChangeFunction = () => {
         let res = !auth.info.profile.driverActiveStatus;
-        dispatch(updateProfile(auth.info, { driverActiveStatus: res }));
+        dispatch(updateProfile(auth.info, {driverActiveStatus: res}));
     }
 
     return (
         <View style={styles.mainViewStyle}>
             <Header
                 backgroundColor={colors.GREY.default}
-                leftComponent={{ icon: 'md-menu', type: 'ionicon', color: colors.WHITE, size: 30, component: TouchableWithoutFeedback, onPress: () => { props.navigation.toggleDrawer(); } }}
+                leftComponent={{
+                    icon: 'md-menu',
+                    type: 'ionicon',
+                    color: colors.WHITE,
+                    size: 30,
+                    component: TouchableWithoutFeedback,
+                    onPress: () => {
+                        props.navigation.toggleDrawer();
+                    }
+                }}
                 centerComponent={<Text style={styles.headerTitleStyle}>{language.task_list}</Text>}
                 containerStyle={styles.headerStyle}
                 rightComponent={() => {
                     return (
-                        <View style={{flexDirection:'row', alignItems:'center'}}>
-                            <Text style={{color:colors.WHITE, fontWeight:'bold', marginRight:3}}>{language.on_duty}</Text>
+                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                            <Text style={{
+                                color: colors.WHITE,
+                                fontWeight: 'bold',
+                                marginRight: 3
+                            }}>{language.on_duty}</Text>
                             <Switch
                                 value={auth.info && auth.info.profile ? auth.info.profile.driverActiveStatus : false}
                                 onValueChange={onChangeFunction}
@@ -107,12 +141,12 @@ export default function DriverTrips(props) {
                     (auth.info.profile.queue ? activeBookings : tasks) : []}
                 keyExtractor={(item, index) => index.toString()}
                 ListEmptyComponent={
-                    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", height: height }}>
+                    <View style={{flex: 1, justifyContent: "center", alignItems: "center", height: height}}>
                         <View>
                             <Image
                                 source={require("../../assets/images/no_riders.png")}
                                 resizeMode="contain"
-                                style={{ height: 120, width: 200 }}
+                                style={{height: 120, width: 200}}
                             ></Image>
                         </View>
                         <View>
@@ -123,28 +157,29 @@ export default function DriverTrips(props) {
                         </View>
                     </View>
                 }
-                renderItem={({ item, index }) => {
+                renderItem={({item, index}) => {
                     return (
                         <View style={styles.listItemView}>
-                            <View style={[styles.mapcontainer, activeBookings && activeBookings.length >= 1 ? { height: height - 400 } : null]}>
+                            <View
+                                style={[styles.mapcontainer, activeBookings && activeBookings.length >= 1 ? {height: height - 400} : null]}>
                                 <MapView style={styles.map}
-                                    provider={PROVIDER_GOOGLE}
-                                    initialRegion={{
-                                        latitude: item.pickup.lat,
-                                        longitude: item.pickup.lng,
-                                        latitudeDelta: activeBookings && activeBookings.length >= 1 ? 0.0922 : 0.0822,
-                                        longitudeDelta: activeBookings && activeBookings.length >= 1 ? 0.0421 : 0.0321
-                                    }}
+                                         provider={PROVIDER_GOOGLE}
+                                         initialRegion={{
+                                             latitude: item.pickup.lat,
+                                             longitude: item.pickup.lng,
+                                             latitudeDelta: activeBookings && activeBookings.length >= 1 ? 0.0922 : 0.0822,
+                                             longitudeDelta: activeBookings && activeBookings.length >= 1 ? 0.0421 : 0.0321
+                                         }}
                                 >
                                     <Marker
-                                        coordinate={{ latitude: item.pickup.lat, longitude: item.pickup.lng }}
+                                        coordinate={{latitude: item.pickup.lat, longitude: item.pickup.lng}}
                                         title={item.pickup.add}
                                         description={language.pickup_location}
                                         pinColor={colors.GREEN.default}
                                     />
 
                                     <Marker
-                                        coordinate={{ latitude: item.drop.lat, longitude: item.drop.lng }}
+                                        coordinate={{latitude: item.drop.lat, longitude: item.drop.lng}}
                                         title={item.drop.add}
                                         description={language.drop_location}
                                     />
@@ -160,17 +195,21 @@ export default function DriverTrips(props) {
 
                             <View style={styles.mapDetails}>
                                 <View style={styles.dateView}>
-                                    <Text style={styles.listDate}>{new Date(item.tripdate).toLocaleString(dateStyle)}</Text>
+                                    <Text
+                                        style={styles.listDate}>{new Date(item.tripdate).toLocaleString(dateStyle)}</Text>
                                 </View>
                                 <View style={styles.rateViewStyle}>
-                                    <Text style={styles.rateViewTextStyle}>{settings.symbol}{item ? item.estimate > 0 ? parseFloat(item.estimate).toFixed(2) : 0 : null}</Text>
+                                    <Text
+                                        style={styles.rateViewTextStyle}>{item ? item.estimate > 0 ? formatPrice(item.estimate) : formatPrice(0) : null}</Text>
                                 </View>
                                 <View style={styles.estimateView}>
-                                    <Text style={styles.listEstimate}>{item.estimateDistance? parseFloat(item.estimateDistance).toFixed(2): 0} {settings.convert_to_mile? language.mile : language.km}</Text>
-                                    <Text style={styles.listEstimate}>{item.estimateTime? parseFloat(item.estimateTime/60).toFixed(0): 0} {language.mins}</Text>
+                                    <Text
+                                        style={styles.listEstimate}>{item.estimateDistance ? parseFloat(item.estimateDistance).toFixed(2) : 0} {settings.convert_to_mile ? language.mile : language.km}</Text>
+                                    <Text
+                                        style={styles.listEstimate}>{item.estimateTime ? parseFloat(item.estimateTime / 60).toFixed(0) : 0} {language.mins}</Text>
                                 </View>
                                 <View style={styles.addressViewStyle}>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
                                         <View style={styles.greenDot}></View>
                                         <Text style={styles.addressViewTextStyle}>{item.pickup.add}</Text>
                                     </View>
@@ -181,7 +220,7 @@ export default function DriverTrips(props) {
                                 </View>
                                 {activeBookings && activeBookings.length >= 1 ?
                                     <View style={styles.detailsBtnView}>
-                                        <View style={{ flex: 1 }}>
+                                        <View style={{flex: 1}}>
                                             <Button
                                                 onPress={() => {
                                                     goToBooking(item.id);
@@ -207,7 +246,7 @@ export default function DriverTrips(props) {
                                     </View>
                                     :
                                     <View style={styles.detailsBtnView}>
-                                        <View style={{ flex: 1 }}>
+                                        <View style={{flex: 1}}>
                                             <Button
                                                 onPress={() => {
                                                     setModalVisible(true);
@@ -268,7 +307,7 @@ export default function DriverTrips(props) {
                                 <Text style={styles.alertStyle}>{language.alert_text}</Text>
                             </View>
                             <View style={styles.modalBody}>
-                                <Text style={{ fontSize: 16 }}>{language.ignore_job_title}</Text>
+                                <Text style={{fontSize: 16}}>{language.ignore_job_title}</Text>
                             </View>
                             <View style={styles.modalFooter}>
                                 <TouchableHighlight
@@ -294,8 +333,6 @@ export default function DriverTrips(props) {
         </View>
 
     )
-
-
 
 
 }
@@ -346,7 +383,7 @@ const styles = StyleSheet.create({
         borderRightColor: colors.TRANSPARENT,
         borderBottomColor: colors.YELLOW.secondary,
         transform: [
-            { rotate: '180deg' }
+            {rotate: '180deg'}
         ]
     },
     signInTextStyle: {
@@ -370,16 +407,16 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         color: colors.GREY.default,
         flex: 1,
-        alignSelf:'center'
+        alignSelf: 'center'
     },
-    estimateView:{
+    estimateView: {
         flex: 1.1,
-        flexDirection:'row',
-        alignItems:'center',
-        justifyContent:'space-around',
-        marginBottom:10
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        marginBottom: 10
     },
-    listEstimate:{
+    listEstimate: {
         fontSize: 20,
         color: colors.GREY.secondary,
     },
@@ -514,8 +551,8 @@ const styles = StyleSheet.create({
     rateViewStyle: {
         alignItems: 'center',
         flex: 2,
-        marginTop:10,
-        marginBottom:10
+        marginTop: 10,
+        marginBottom: 10
     },
     rateViewTextStyle: {
         fontSize: 50,

@@ -51,10 +51,10 @@ export const fetchEarningsReport = () => (dispatch) => (firebase) => {
       });
       if (renderobj) {
         const arr = Object.keys(renderobj).map(i => {
-          renderobj[i].myEarning = parseFloat(renderobj[i].customerPaid - renderobj[i].driverShare).toFixed(2);
-          renderobj[i].customerPaid = parseFloat(renderobj[i].customerPaid).toFixed(2);
-          renderobj[i].rideCost = parseFloat(renderobj[i].tripCost - renderobj[i].convenienceFee).toFixed(2);
-          renderobj[i].driverShare = parseFloat(renderobj[i].driverShare).toFixed(2);
+          renderobj[i].myEarning = parseFloat(renderobj[i].customerPaid - renderobj[i].driverShare).toFixed(0);
+          renderobj[i].customerPaid = parseFloat(renderobj[i].customerPaid).toFixed(0);
+          renderobj[i].rideCost = parseFloat(renderobj[i].tripCost - renderobj[i].convenienceFee).toFixed(0);
+          renderobj[i].driverShare = parseFloat(renderobj[i].driverShare).toFixed(0);
           return renderobj[i]
         })
         dispatch({

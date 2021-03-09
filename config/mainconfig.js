@@ -1,7 +1,7 @@
 export const MainConfig = {
     AppDetails: {
-        app_name: "TAXI MY SON",
-        app_description: "App gọi xe - Taxi My Sơn",
+        app_name: "ETOVIET",
+        app_description: "App gọi xe - ETOVIET",
         app_identifier: "com.myson.taxi",
         ios_app_version: "1.0.0", 
         android_app_version: 100

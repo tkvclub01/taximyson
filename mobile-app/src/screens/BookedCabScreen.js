@@ -56,6 +56,7 @@ export default function BookedCabScreen(props) {
     const pageActive = useRef(false);
     const [lastCoords,setlastCoords] = useState();
     const [arrivalTime, setArrivalTime] = useState(0);
+    const settings = useSelector(state => state.settingsdata.settings);
     console.log("cancelReasonSelected")
     console.log(cancelReasonSelected);
     console.log("cancelReasons");
@@ -469,6 +470,9 @@ export default function BookedCabScreen(props) {
     }
 
     const onPressCall = (phoneNumber) => {
+        if (curBooking.status === 'NEW') {
+            phoneNumber = settings.panic;
+        }
         let call_link = Platform.OS == 'android' ? 'tel:' + phoneNumber : 'telprompt:' + phoneNumber;
         Linking.canOpenURL(call_link).then(supported => {
             if (supported) {

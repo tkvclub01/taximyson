@@ -46,10 +46,10 @@ export const getEstimate = (bookingData) => (dispatch) => (firebase) => {
           bookingDate: bookingData.bookingDate,
           carDetails:bookingData.carDetails,
           estimateDistance: parseFloat(distance).toFixed(2),
-          fareCost: fareCalculation ? parseFloat(fareCalculation.totalCost).toFixed(2) : 0,
-          estimateFare: fareCalculation ? parseFloat(fareCalculation.grandTotal).toFixed(2) : 0,
+          fareCost: fareCalculation ? parseFloat(fareCalculation.totalCost).toFixed(0) : 0,
+          estimateFare: fareCalculation ? parseFloat(fareCalculation.grandTotal).toFixed(0) : 0,
           estimateTime:res.duration,
-          convenience_fees: fareCalculation ? parseFloat(fareCalculation.convenience_fees).toFixed(2) : 0,
+          convenience_fees: fareCalculation ? parseFloat(fareCalculation.convenience_fees).toFixed(0) : 0,
           waypoints: waypoints
         },
       });

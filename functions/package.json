@@ -24,7 +24,6 @@
     "md5": "^2.3.0",
     "node-fetch": "^2.6.0",
     "node-vnpay": "^1.0.1",
-    "paystack": "^2.0.1",
     "qs": "^6.9.6",
     "querystring": "^0.2.1",
     "request": "^2.88.2",

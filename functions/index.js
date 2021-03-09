@@ -100,9 +100,9 @@ exports.setup = functions.https.onRequest((request, response) => {
             }]
         },
         "settings": {
-            "code": "USD",
+            "code": "VND",
             "panic": "991",
-            "symbol": "$",
+            "symbol": "đ",
             "driver_approval": true,
             "otp_secure": false,
             "email_verify": true,

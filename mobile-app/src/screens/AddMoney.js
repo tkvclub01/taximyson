@@ -23,7 +23,7 @@ export default function AddMoneyScreen(props) {
     const [state, setState] = useState({
         userdata: props.navigation.getParam('userdata'),
         providers: props.navigation.getParam('providers'),
-        amount: '5',
+        amount: '100000',
         qickMoney: [{amount: '100000', selected: false}, {amount: '200000', selected: false}, {
             amount: '500000',
             selected: false

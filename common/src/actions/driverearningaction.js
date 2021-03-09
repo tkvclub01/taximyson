@@ -43,7 +43,7 @@ export const fetchDriverEarnings = (uid,role) => (dispatch) => (firebase) => {
       });
       if (renderobj) {
         const arr = Object.keys(renderobj).map(i => {
-          renderobj[i].driverShare = parseFloat(renderobj[i].driverShare).toFixed(2)
+          renderobj[i].driverShare = parseFloat(renderobj[i].driverShare).toFixed(0)
           return renderobj[i]
         })
         dispatch({

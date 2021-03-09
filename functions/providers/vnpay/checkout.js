@@ -19,7 +19,7 @@ module.exports.render_checkout = async function (request, response) {
     let payURL = await vnpay.genPayURL({
         transactionRef: order_id,
         orderInfo: order_info,
-        orderType: 'pay',
+        orderType: 'topup',
         amount: parseInt(amount, 10)
     });
     /*

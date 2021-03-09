@@ -10,7 +10,7 @@ import { Avatar, Button } from "react-native-elements";
 import { colors } from "../common/theme";
 import { language } from 'config';
 import { useSelector } from 'react-redux';
-
+import {formatNumber} from "react-native-currency-input";
 export default function PromoComp(props) {
 
   const settings = useSelector(state => state.settingsdata.settings);
@@ -19,6 +19,14 @@ export default function PromoComp(props) {
   const onPressButton = (item, index) => {
     const { onPressButton } = props;
     onPressButton(item, index)
+  }
+  const formatPrice = (value) => {
+    return formatNumber(value, {
+      separator: ',',
+      precision: 0,
+      delimiter: '.',
+      ignoreNegative: false,
+    }) + ' ' + settings.symbol;
   }
 
   const renderData = ({ item, index }) => {
@@ -41,7 +49,7 @@ export default function PromoComp(props) {
               <Text style={styles.textStyle}>
                 <Text style={styles.couponCode}>{item.promo_name}</Text> - {item.promo_description}
               </Text>
-              <Text style={styles.timeTextStyle}>{language.min_order_value} {settings.symbol}{item.min_order}</Text>
+              <Text style={styles.timeTextStyle}>{language.min_order_value} {formatPrice(item.min_order)}</Text>
 
             </View>
             <View style={styles.applyBtnPosition} >
